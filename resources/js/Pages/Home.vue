@@ -248,7 +248,7 @@
 
                 <!-- Partnership credit - centered -->
                 <div class="text-center mb-8">
-                    <h1 class="text-xl font-semibold italic text-gray-700/55">Uma parceria CASIS & EJ @ UTFPR-FB ❤️</h1>
+                    <h1 class="text-xl font-semibold italic text-gray-700/55">Uma parceria entre CASIS e TypeX @ UTFPR-FB ❤️</h1>
                 </div>
             </div>
 
@@ -461,7 +461,7 @@
                                     <p class="text-gray-400">FullStack Developer - PHP</p>
                                 </div>
                             </div>
-                            <p class="text-gray-300 mb-4">Presidente @ EJ-FB - Especialista em PHP</p>
+                            <p class="text-gray-300 mb-4">Presidente @ TypeX - Especialista em PHP</p>
                             <div class="mt-auto">
                                 <a href="https://github.com/VitorFerreiraCode" target="_blank" class="inline-block bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors duration-200">
                                     <i class="fab fa-github mr-2"></i> GitHub
