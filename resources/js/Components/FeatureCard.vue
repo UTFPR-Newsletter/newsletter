@@ -11,18 +11,18 @@
 </template>
 
 <script setup>
-defineProps({
-    icon: {
-        type: String,
-        required: true
-    },
-    title: {
-        type: String,
-        required: true
-    },
-    body: {
-        type: String,
-        required: true
-    }
-});
+    defineProps({
+        icon: {
+            type: String,
+            required: true
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        body: {
+            type: String,
+            required: true
+        }
+    });
 </script> 

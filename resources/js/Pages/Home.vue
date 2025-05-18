@@ -9,46 +9,59 @@
     import { ref, onMounted, onUnmounted, watch } from 'vue'
     import axios from 'axios'
     import FeatureCard from '@/Components/FeatureCard.vue'
+    import AuthorCard from '@/Components/AuthorCard.vue'
+
+    import { toast } from 'vue3-toastify'
+    import 'vue3-toastify/dist/index.css'
+    
+    // Props from the server
+    const props = defineProps({
+        authors: {
+            type: Array,
+            default: () => []
+        }
+    });
     
     const subscriberEmail = ref('')
     const loading = ref(false)
+    const activeTab = ref('sobre')
+    const isMenuOpen = ref(false)
+    const showBackToTop = ref(false)
+    const mainHeader = ref(null)
+    const showStickyHeader = ref(false)
 
-    async function subscribe() {
-        if (!subscriberEmail.value) return
+    const subscribe = async () => {
+        if (!subscriberEmail.value) {
+            toast.warning('Digite um e-mail antes de assinar', { position: toast.POSITION.TOP_RIGHT })
+            return
+        }
 
         loading.value = true
+        toast.info('Assinando…', { position: toast.POSITION.TOP_RIGHT })
 
         try {
-            await axios.post('/subscribe', { sub_email: subscriberEmail.value })
-            subscriberEmail.value = ''
-            // aqui você pode chamar um toast/diálogo de sucesso
-            console.log('Assinatura enviada com sucesso')
+            const { data } = await axios.post('/subscribe', {
+                sub_email: subscriberEmail.value
+            })
+            // data = { status: true|false, message: string }
+            if (data.status) {
+                toast.success(data.message, { position: toast.POSITION.TOP_RIGHT })
+                subscriberEmail.value = ''   // limpa o input, se quiser
+            } else {
+                toast.error(data.message,   { position: toast.POSITION.TOP_RIGHT })
+            }
         } catch (err) {
-            // exibe erro
-            console.error('Falha ao assinar:', err.response?.data || err.message)
-            // aqui você pode chamar um toast/diálogo de erro
+            // se status 409 (já existe), por exemplo:
+            const msg = err.response?.data?.message || 'Erro ao assinar'
+            toast.error(msg, { position: toast.POSITION.TOP_RIGHT })
         } finally {
             loading.value = false
         }
     }
-
-    // State for active tab
-    const activeTab = ref('sobre') // Default tab
     
-    // State for dropdown menu
-    const isMenuOpen = ref(false)
-    
-    // State for back-to-top button
-    const showBackToTop = ref(false)
-    
-    // Function to toggle dropdown menu
     const toggleMenu = () => {
         isMenuOpen.value = !isMenuOpen.value
     }
-    
-    // Refs for tracking scroll
-    const mainHeader = ref(null)
-    const showStickyHeader = ref(false)
     
     // Function to handle scroll and show/hide sticky header
     const handleScroll = () => {
@@ -95,7 +108,7 @@
                 <!-- Logo in white square with hover effect -->
                 <div class="logo-container mr-4">
                     <div class="logo-box">
-                        <div class="logo-front">
+                        <div class="logo-front flex items-center justify-center">
                             <img :src="logoOnlyWeb" alt="WebNews Logo" class="h-10" />
                         </div>
                         <div class="logo-back">
@@ -155,7 +168,7 @@
             <div class="container mx-auto px-4 py-6 flex items-center justify-between" ref="mainHeader">
                 <div class="flex items-center">
                     <!-- Logo + system name -->
-                    <img :src="logo" alt="AiDrop Logo" class="h-16" />
+                    <img :src="logo" alt="Logo" class="h-16" />
                     <span class="ml-3 text-xl font-semibold">WebNews</span>
                     
                     <!-- Vertical divider -->
@@ -211,7 +224,7 @@
             <div class="container mx-auto px-4 py-12 pt-4 text-center">
                 <!-- Circular logo background - white with inner shadow -->
                 <div class="inline-block bg-white p-8 rounded-full shadow-inner border border-gray-300">
-                    <img :src="logo" alt="AiDrop Logo" class="h-64 mx-auto spider-logo" />
+                    <img :src="logo" alt="Logo" class="h-64 mx-auto spider-logo" />
                 </div>
                 <!-- System name -->
                 <h1 class="mt-10 text-3xl font-semibold italic">WebNews</h1>
@@ -267,11 +280,18 @@
                         Conteúdo de Qualidade
                     </span>
                 </div>
+
+                <div v-if="activeTab === 'autores'" class="flex flex-col items-center justify-center">
+                    <!-- Badge -->
+                    <span class="inline-block px-4 py-2 mt-10 bg-gray-800 text-white rounded-full text-sm font-bold mb-6">
+                        Autores Cadastrados
+                    </span>
+                </div>
             </div>
         </div>
 
         <!-- Bottom white section -->   
-        <div class="bg-white flex-grow" :style="{ height: activeTab === 'newsletters' ? '120vh' : '235vh' }">
+        <div class="bg-white flex-grow" :style="{ height: activeTab === 'newsletters' ? '120vh' : activeTab === 'autores' ? '100vh' : '235vh' }">
             <div class="w-full pt-8">
                 <!-- Tab content sections -->
                 <div v-if="activeTab === 'sobre'" class="content-section">
@@ -290,7 +310,7 @@
                             <!-- Statistics -->
                             <div class="grid grid-cols-3 gap-8 w-full max-w-2xl mt-6">
                                 <div class="flex flex-col items-center">
-                                    <span class="text-4xl font-bold text-gray-800">24</span>
+                                    <span class="text-4xl font-bold text-gray-800">1</span>
                                     <span class="text-gray-700/55 mt-2">Autores</span>
                                 </div>
                                 
@@ -402,10 +422,16 @@
                             <div class="container w-full max-w-7xl mx-auto mt-8 mb-12">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
                                     <!-- Left column -->
-                                    <div class="bg-gray-100 rounded-lg w-full h-[32rem] shadow-md"></div>
+                                    <div class="bg-gray-100 rounded-lg w-full h-[32rem] shadow-md flex flex-col items-center justify-center">
+                                        <i class="fad fa-construction fa-4x text-amber-400 mb-4"></i>
+                                        <h2 class="text-2xl font-semibold text-center text-amber-500/50">Em breve, Estamos preparando para você!</h2>
+                                    </div>
                                     
                                     <!-- Right column -->
-                                    <div class="bg-gray-100 rounded-lg w-full h-[32rem] shadow-md"></div>
+                                    <div class="bg-gray-100 rounded-lg w-full h-[32rem] shadow-md flex flex-col items-center justify-center">
+                                        <i class="fad fa-construction fa-4x text-amber-400 mb-4"></i>
+                                        <h2 class="text-2xl font-semibold text-center text-amber-500/50">Em breve, Estamos preparando para você!</h2>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -415,6 +441,47 @@
                 <div v-if="activeTab === 'newsletters'" class="content-section">
                     <div class="w-full p-8">
                         
+                    </div>
+                </div>
+
+                <div v-if="activeTab === 'autores'" class="content-section">
+                    <div class="w-full p-8">
+                        <div class="flex flex-col items-center container w-full max-w-7xl mx-auto mb-8">
+                            <h1 class="text-4xl font-bold mb-4">
+                                Tornesse um Autor <i class="fad fa-bullhorn" style="font-size: 1.6rem;"></i>
+                            </h1>
+                            
+                            <!-- Subtitle -->
+                            <p class="text-xl text-center mt-2 text-gray-700/55 mb-6 max-w-3xl">
+                                Credencie-se no sistema para poder publicar newsletters e compartilhar seu conhecimento com a comunidade acadêmica.
+                            </p>
+
+                            <!-- Register Button -->
+                            <button class="px-6 py-3 bg-white text-lg rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 mb-2">
+                                <i class="fad fa-user-plus mr-2"></i>
+                                Me Cadastrar
+                            </button>
+
+                            <div class="flex justify-center w-full mt-8">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10 md:place-items-center">
+                                    <!-- Show message if no authors -->
+                                    <div v-if="props.authors.length === 0" class="col-span-3 text-center text-gray-500 py-10">
+                                        <i class="fad fa-user-slash text-4xl mb-4"></i>
+                                        <p class="text-xl">Nenhum autor cadastrado no momento</p>
+                                    </div>
+                                    
+                                    <!-- Dynamic Author Cards -->
+                                    <AuthorCard 
+                                        v-for="author in props.authors" 
+                                        :key="author.id"
+                                        :image="author.image || devKurt" 
+                                        :name="author.name"
+                                        :description="author.description"
+                                        :badges="author.badges"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

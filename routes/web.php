@@ -3,14 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-});
+Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/authors', function () {
-    return Inertia::render('Authors');
-});
+Route::get('/authors', fn() => Inertia::render('Authors'))->name('authors');
 
 Route::post('/subscribe', [SubscriberController::class, 'store'])
     ->name('subscribers.store');

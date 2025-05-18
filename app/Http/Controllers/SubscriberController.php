@@ -19,14 +19,17 @@ class SubscriberController extends Controller
         $subscriberExists = $subscriber->getObjectByField("sub_email", $data["sub_email"]);
 
         if ($subscriberExists) {
-            return redirect()->back()->with("error", "Você já está assinado!");
+            return response()->json([
+                "status" => false,
+                "message" => "Você já está assinado!"
+            ], 409);
         }
 
         $subscriber->save($data);
 
-        return redirect()->back()
-            ->with('toasts', [
-                ['id' => (string) Str::uuid(), 'type' => 'success', 'message' => 'Cadastro OK!'],
-            ]);
+        return response()->json([
+            "status" => true,
+            "message" => "Assinatura enviada com sucesso!"
+        ], 201);
     }
 }
