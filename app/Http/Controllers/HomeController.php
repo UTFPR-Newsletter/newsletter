@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
+use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -41,8 +42,26 @@ class HomeController extends Controller
             ];
         });
 
+        $newsletters = Newsletter::with('categories')->get()->map(function($newsletter) {
+            $categories = $newsletter->categories->pluck('cat_name')->toArray();
+
+            return [
+                'id' => $newsletter->new_id,
+                'title' => $newsletter->new_title,
+                'frequency' => Newsletter::$frequencyOptions[$newsletter->new_frequency],
+                'hour' => $newsletter->new_hour,
+                'icon' => $newsletter->new_icon,
+                'estimate_date' => $newsletter->new_estimate_date,
+                'status' => $newsletter->new_status,
+                'body' => $newsletter->new_body,
+                'categories' => $categories,
+                'author' => $newsletter->authors->pluck('aut_name')->toArray()[0]
+            ];
+        });
+
         return Inertia::render('Home', [
-            'authors' => $authors
+            'authors' => $authors,
+            'newsletters' => $newsletters
         ]);
     }
 } 

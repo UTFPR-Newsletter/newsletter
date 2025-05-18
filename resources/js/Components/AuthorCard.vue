@@ -25,7 +25,7 @@
         <!-- Button -->
         <button class="w-full mt-auto bg-white text-gray-800 hover:cursor-pointer hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
             <i class="fad fa-book-spells mr-2"></i>
-            Ver conteúdos
+            Ver Newsletters
         </button>
     </div>
 </template>

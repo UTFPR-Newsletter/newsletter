@@ -10,6 +10,7 @@
     import axios from 'axios'
     import FeatureCard from '@/Components/FeatureCard.vue'
     import AuthorCard from '@/Components/AuthorCard.vue'
+    import NewsletterCard from '@/Components/NewsletterCard.vue'
 
     import { toast } from 'vue3-toastify'
     import 'vue3-toastify/dist/index.css'
@@ -19,10 +20,15 @@
         authors: {
             type: Array,
             default: () => []
+        },
+        newsletters: {
+            type: Array,
+            default: () => []
         }
     });
     
     const subscriberEmail = ref('')
+    const searchQuery = ref('')
     const loading = ref(false)
     const activeTab = ref('sobre')
     const isMenuOpen = ref(false)
@@ -267,17 +273,17 @@
 
             <!-- Curved transition to white section -->
             <div class="wave-transition">
-                <div v-if="activeTab === 'newsletters'" class="flex flex-col items-center justify-center">
-                    <div class="flex flex-col items-center justify-center">
-                        <i class="fad fa-construction fa-4x mt-10 text-amber-400 text-center"></i>&nbsp;&nbsp;
-                        <h2 class="text-2xl font-semibold mb-6 mt-2 text-center text-amber-500/50">Em breve, Estamos preparando para você!</h2>
-                    </div>
-                </div>
-
                 <div v-if="activeTab === 'sobre'" class="flex flex-col items-center justify-center">
                     <!-- Badge -->
                     <span class="inline-block px-4 py-2 mt-10 bg-gray-800 text-white rounded-full text-sm font-bold mb-6">
                         Conteúdo de Qualidade
+                    </span>
+                </div>
+
+                <div v-if="activeTab === 'newsletters'" class="flex flex-col items-center justify-center">
+                    <!-- Badge -->
+                    <span class="inline-block px-4 py-2 mt-10 bg-gray-800 text-white rounded-full text-sm font-bold mb-6">
+                        Nossos Conteúdos
                     </span>
                 </div>
 
@@ -440,7 +446,83 @@
                 
                 <div v-if="activeTab === 'newsletters'" class="content-section">
                     <div class="w-full p-8">
-                        
+                        <div class="flex flex-col items-center container w-full max-w-7xl mx-auto mb-8">
+                            <h1 class="text-4xl font-bold mb-4">
+                                Newsletters Cadastrados <i class="fad fa-newspaper" style="font-size: 1.6rem;"></i>
+                            </h1>
+                            
+                            <!-- Subtitle -->
+                            <p class="text-xl text-center mt-2 text-gray-700/55 mb-6 max-w-3xl">
+                                Fitre os registros por categoria, autor ou palavra-chave. aqui começa sua jornada de conhecimento.
+                            </p>
+
+                            <!-- Search Field -->
+                            <div class="mt-4 mb-4 w-full flex justify-center">
+                                <div class="flex w-full max-w-4xl">
+                                    <!-- Icon Prepend -->
+                                    <div class="flex-shrink-0">
+                                        <span class="flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700/40 border border-gray-300 border-r-0 rounded-l-md h-full">
+                                            <i class="fad fa-search text-xl"></i>
+                                        </span>
+                                    </div>
+                                    <!-- Input Field -->
+                                    <input
+                                        type="text"
+                                        v-model="searchQuery"
+                                        placeholder="Buscar newsletters..."
+                                        class="flex-1 px-4 py-3 text-lg bg-white border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                                    />
+                                    <!-- Search Button -->
+                                    <button 
+                                        class="px-6 py-3 bg-white text-lg rounded-r-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 border-l-0">
+                                        Buscar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Filter Button -->
+                            <div class="w-full max-w-4xl mx-auto mb-6 flex justify-between">
+                                <div class="flex items-center">
+                                    <button class="px-5 py-2 bg-white rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 flex items-center">
+                                        <i class="fad fa-filter mr-2"></i>
+                                        Filtros Avançados
+                                    </button>
+
+                                    <button class="px-5 py-2 ml-4 bg-white rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 flex items-center">
+                                        <i class="fad fa-tags mr-2"></i>
+                                        Categorias
+                                    </button>
+                                </div>
+
+                                <div class="flex items-center text-gray-700/55">
+                                    Apresentado 1 de 10 resultados
+                                </div>
+                            </div>
+
+                            <div class="flex justify-center w-full mt-8">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10 md:place-items-center">
+                                    <!-- Show message if no newsletters -->
+                                    <div v-if="props.newsletters.length === 0" class="col-span-3 text-center text-gray-500 py-10">
+                                        <i class="fad fa-newspaper-slash text-4xl mb-4"></i>
+                                        <p class="text-xl">Nenhuma newsletter cadastrada no momento</p>
+                                    </div>
+                                    
+                                    <!-- Dynamic Author Cards -->
+                                    <NewsletterCard 
+                                        v-for="newsletter in props.newsletters" 
+                                        :key="newsletter.id"
+                                        :icon="newsletter.icon"
+                                        :title="newsletter.title"
+                                        :description="newsletter.body"
+                                        :badges="newsletter.categories"
+                                        :author="newsletter.author"
+                                        :hour="newsletter.hour"
+                                        :frequency="newsletter.frequency"
+                                        :initialSubscribed="false"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
