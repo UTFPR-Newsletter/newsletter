@@ -5,6 +5,7 @@ WORKDIR /var/task
 # copia todos os arquivos do projeto pro container
 COPY . .
 
+<<<<<<< HEAD
 # instala o composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -15,6 +16,11 @@ RUN composer install --no-dev --optimize-autoloader
 # esse comando tem que ser assim por conta do alpine
 RUN apk add --no-cache nodejs npm
 
+=======
+# instala as dependências do php
+RUN composer install --no-dev --optimize-autoloader
+
+>>>>>>> 958145c24734b933cfb0aa36d9f1ba6e64377b93
 # instala as dependências do node.js (Vue e Inertia)
 RUN if [ -f package.json ]; then \
         npm install && \
