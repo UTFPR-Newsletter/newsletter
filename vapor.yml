@@ -1,0 +1,32 @@
+id: 71343
+name: newsletter
+
+environments:
+  production:
+    memory: 1024
+    cli-memory: 512
+    runtime: 'php-8.4:al2'
+
+    # 1. Ignorar pastas/arquivos desnecessários
+    ignore:
+      - node_modules             # já construímos o build, não precisamos de todo o node_modules no Lambda :contentReference[oaicite:0]{index=0}
+      - tests                     # não há testes em produção :contentReference[oaicite:1]{index=1}
+      - .github                   # arquivos de CI/CD
+      - docs                      # documentação local
+      - README.md
+      - .editorconfig
+      - .env.*                    # nunca subir arquivos de ambiente locais
+
+    databases:
+      - db_newsletter
+
+    # 2. Build steps: npm, composer sem dev e limpeza
+    build:
+      - 'npm ci'                                        # instala dependências JS :contentReference[oaicite:2]{index=2}
+      - 'npm run build'                                 # gera public/build/manifest.json :contentReference[oaicite:3]{index=3}
+      - 'composer install --no-dev --optimize-autoloader'  # instala só dependências de produção e otimiza autoloader :contentReference[oaicite:5]{index=5}
+      - 'php artisan event:clear'
+      - 'php artisan config:clear'
+      - 'php artisan route:clear'
+      - 'php artisan view:clear'
+      - 'php artisan config:cache'                      # opcional: refaz cache para performance :contentReference[oaicite:6]{index=6}
