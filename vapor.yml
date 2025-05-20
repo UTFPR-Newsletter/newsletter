@@ -21,12 +21,4 @@ environments:
       - db_newsletter
 
     # 2. Build steps: npm, composer sem dev e limpeza
-    build:
-      - 'npm ci'                                        # instala dependências JS :contentReference[oaicite:2]{index=2}
-      - 'npm run build'                                 # gera public/build/manifest.json :contentReference[oaicite:3]{index=3}
-      - 'composer install --no-dev --optimize-autoloader'  # instala só dependências de produção e otimiza autoloader :contentReference[oaicite:5]{index=5}
-      - 'php artisan event:clear'
-      - 'php artisan config:clear'
-      - 'php artisan route:clear'
-      - 'php artisan view:clear'
-      - 'php artisan config:cache'                      # opcional: refaz cache para performance :contentReference[oaicite:6]{index=6}
+    build: dockerfile

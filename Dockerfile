@@ -1,40 +1,31 @@
+# Usa a imagem base PHP + Vapor (PHP 8.2)
 FROM laravelphp/vapor:php82
 
-<<<<<<< HEAD
-# 2. Copiar todo o código para dentro do container
-COPY . /var/task
-=======
 WORKDIR /var/task
 
-# copia todos os arquivos do projeto pro container
+# 1) Copia manifestos e código de uma vez
+COPY composer.json composer.lock package.json package-lock.json ./
 COPY . .
 
-# instala o composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# 2) Instala Composer e dependências PHP sem scripts
+RUN curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# instala as dependências do php
-RUN composer install --no-dev --optimize-autoloader
+# 3) Gera autoload otimizado e descobre pacotes
+RUN composer dump-autoload --optimize && \
+    php artisan package:discover --ansi
 
-# instala node.js (e o npm)
-# esse comando tem que ser assim por conta do alpine
-RUN apk add --no-cache nodejs npm
+# 4) Instala Node.js, NPM e dependências JS
+RUN apk add --no-cache nodejs npm && \
+    npm ci
 
-=======
-# instala as dependências do php
-RUN composer install --no-dev --optimize-autoloader
+# 5) Exponha as portas do Laravel (8000) e do Vite (5173)  
+EXPOSE 8000 5173 
 
->>>>>>> 958145c24734b933cfb0aa36d9f1ba6e64377b93
-# instala as dependências do node.js (Vue e Inertia)
-RUN if [ -f package.json ]; then \
-        npm install && \
-        npm run build; \
-    fi
+# 6) Ambiente de desenvolvimento
+ENV APP_ENV=development
+ENV APP_DEBUG=true
 
-# permissão
-RUN chown -R www-data:www-data /var/task/storage /var/task/bootstrap/cache
-
-# porta padrão do laravel
-EXPOSE 8000
-
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
->>>>>>> 11223edec1ad2688b03406f4472bc26efcfd532f
+# 7) Comando que inicia Vite com HMR e o servidor Laravel simultaneamente
+CMD ["sh", "-c", "npm run dev -- --host=0.0.0.0 & php artisan serve --host=0.0.0.0 --port=8000"]
