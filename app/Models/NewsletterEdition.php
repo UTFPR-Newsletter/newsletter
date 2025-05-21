@@ -15,6 +15,24 @@ class NewsletterEdition extends Model
     // se não houver created_at / updated_at
     public $timestamps = false;
 
+    public const STATUS_WRITING = 'writing';
+    public const STATUS_WAITING_REVIEW = 'waiting_review';
+    public const STATUS_REVIEWING = 'reviewing';
+    public const STATUS_REVIEWED = 'reviewed';
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_SENT = 'sent';
+    public const STATUS_CANCELED = 'canceled';
+
+    public static $statusOptions = [
+        self::STATUS_WRITING => 'Escrevendo',
+        self::STATUS_WAITING_REVIEW => 'Aguardando Revisão',
+        self::STATUS_REVIEWING => 'Revisando',
+        self::STATUS_REVIEWED => 'Revisado',
+        self::STATUS_PENDING => 'Pendente',
+        self::STATUS_SENT => 'Enviado',
+        self::STATUS_CANCELED => 'Cancelado',
+    ];
+
     // campos que podem ser preenchidos em mass-assignment
     protected $fillable = [
         'nee_estimate_date',
