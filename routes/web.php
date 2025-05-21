@@ -7,6 +7,8 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index']);
 
+Route::get('/login', fn() => Inertia::render('Login'))->name('login');
+
 Route::get('/authors', fn() => Inertia::render('Authors'))->name('authors');
 
 Route::post('/subscribe', [SubscriberController::class, 'store'])

@@ -14,6 +14,8 @@
 
     import { toast } from 'vue3-toastify'
     import 'vue3-toastify/dist/index.css'
+
+    import { Link } from '@inertiajs/vue3'
     
     // Props from the server
     const props = defineProps({
@@ -67,6 +69,10 @@
     
     const toggleMenu = () => {
         isMenuOpen.value = !isMenuOpen.value
+    }
+
+    const goLogin = () => {
+        window.location.href = '/login';
     }
     
     // Function to handle scroll and show/hide sticky header
@@ -159,10 +165,11 @@
                         <span class="text-gray-800 font-medium">Perfil</span>
                     </div>
                     <div class="p-3">
-                        <button class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+                        <Link href="/login" 
+                            class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
                             <i class="fad fa-sign-in mr-2"></i>
                             Fazer Login
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -297,24 +304,24 @@
         </div>
 
         <!-- Bottom white section -->   
-        <div class="bg-white flex-grow" :style="{ height: activeTab === 'newsletters' ? '120vh' : activeTab === 'autores' ? '100vh' : '235vh' }">
+        <div class="bg-white flex-grow">
             <div class="w-full pt-8">
                 <!-- Tab content sections -->
                 <div v-if="activeTab === 'sobre'" class="content-section">
                     <div class="w-full mt-8">
                         <div class="flex flex-col items-center text-center">
                             <!-- Title -->
-                            <h1 class="text-4xl font-bold mt-4 mb-4">
+                            <h1 class="text-4xl font-bold mt-4 mb-4 px-4">
                                 Unificando e a disseminação de conteúdo
                             </h1>
                             
                             <!-- Subtitle -->
-                            <p class="text-xl mt-2 text-gray-700/55 mb-6 max-w-3xl">
+                            <p class="text-xl mt-2 text-gray-700/55 mb-6 max-w-3xl px-4">
                                 Um local onde qualquer um pode começar a disponibilizar newsletters para diversos alunos da UTFPR. Feito por alunos, para alunos.
                             </p>
                             
                             <!-- Statistics -->
-                            <div class="grid grid-cols-3 gap-8 w-full max-w-2xl mt-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full max-w-2xl mt-6 px-4">
                                 <div class="flex flex-col items-center">
                                     <span class="text-4xl font-bold text-gray-800">1</span>
                                     <span class="text-gray-700/55 mt-2">Autores</span>
@@ -332,7 +339,7 @@
                             </div>
                             
                             <!-- Divider with spider image -->
-                            <div class="w-full flex items-center justify-center">
+                            <div class="w-full flex items-center justify-center px-4">
                                 <div class="h-px bg-gray-300 w-1/4"></div>
                                 <div class="mx-4">
                                     <img :src="spiderDivider" alt="Spider Divider" class="h-30 mt-4" />
@@ -341,11 +348,10 @@
                             </div>
                             
                             <!-- Features Cards -->
-
                             <span class="inline-block px-4 py-2 mt-6 bg-gray-800 text-white rounded-full text-sm font-bold mb-6">
                                 Features do Sistema
                             </span>
-                            <div class="container w-full max-w-7xl mx-auto mt-8 mb-8">
+                            <div class="container w-full max-w-7xl mx-auto mt-8 mb-8 px-4">
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10">
                                     <!-- Card 1 -->
                                     <FeatureCard 
@@ -413,11 +419,11 @@
                             </div>
 
                             <!-- Divider with spider image -->
-                            <div class="w-full flex items-center justify-center">
+                            <div class="w-full flex items-center justify-center px-4">
                                 <div class="h-px bg-gray-300 w-1/4"></div>
-                                    <div class="mx-4">
-                                        <img :src="spiderDivider" alt="Spider Divider" class="h-30 mt-4" />
-                                    </div>
+                                <div class="mx-4">
+                                    <img :src="spiderDivider" alt="Spider Divider" class="h-30 mt-4" />
+                                </div>
                                 <div class="h-px bg-gray-300 w-1/4"></div>
                             </div>
 
@@ -425,16 +431,16 @@
                                 Preview do Email
                             </span>
                             
-                            <div class="container w-full max-w-7xl mx-auto mt-8 mb-12">
+                            <div class="container w-full max-w-7xl mx-auto mt-8 mb-12 px-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
                                     <!-- Left column -->
-                                    <div class="bg-gray-100 rounded-lg w-full h-[32rem] shadow-md flex flex-col items-center justify-center">
+                                    <div class="bg-gray-100 rounded-lg w-full min-h-[32rem] shadow-md flex flex-col items-center justify-center p-4">
                                         <i class="fad fa-construction fa-4x text-amber-400 mb-4"></i>
                                         <h2 class="text-2xl font-semibold text-center text-amber-500/50">Em breve, Estamos preparando para você!</h2>
                                     </div>
                                     
                                     <!-- Right column -->
-                                    <div class="bg-gray-100 rounded-lg w-full h-[32rem] shadow-md flex flex-col items-center justify-center">
+                                    <div class="bg-gray-100 rounded-lg w-full min-h-[32rem] shadow-md flex flex-col items-center justify-center p-4">
                                         <i class="fad fa-construction fa-4x text-amber-400 mb-4"></i>
                                         <h2 class="text-2xl font-semibold text-center text-amber-500/50">Em breve, Estamos preparando para você!</h2>
                                     </div>
@@ -447,17 +453,17 @@
                 <div v-if="activeTab === 'newsletters'" class="content-section">
                     <div class="w-full p-8">
                         <div class="flex flex-col items-center container w-full max-w-7xl mx-auto mb-8">
-                            <h1 class="text-4xl font-bold mb-4">
+                            <h1 class="text-4xl font-bold mb-4 px-4 text-center">
                                 Newsletters Cadastrados <i class="fad fa-newspaper" style="font-size: 1.6rem;"></i>
                             </h1>
                             
                             <!-- Subtitle -->
-                            <p class="text-xl text-center mt-2 text-gray-700/55 mb-6 max-w-3xl">
+                            <p class="text-xl text-center mt-2 text-gray-700/55 mb-6 max-w-3xl px-4">
                                 Fitre os registros por categoria, autor ou palavra-chave. aqui começa sua jornada de conhecimento.
                             </p>
 
                             <!-- Search Field -->
-                            <div class="mt-4 mb-4 w-full flex justify-center">
+                            <div class="mt-4 mb-4 w-full flex justify-center px-4">
                                 <div class="flex w-full max-w-4xl">
                                     <!-- Icon Prepend -->
                                     <div class="flex-shrink-0">
@@ -481,8 +487,8 @@
                             </div>
 
                             <!-- Filter Button -->
-                            <div class="w-full max-w-4xl mx-auto mb-6 flex justify-between">
-                                <div class="flex items-center">
+                            <div class="w-full max-w-4xl mx-auto mb-6 flex flex-col sm:flex-row justify-between px-4">
+                                <div class="flex items-center mb-4 sm:mb-0">
                                     <button class="px-5 py-2 bg-white rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 flex items-center">
                                         <i class="fad fa-filter mr-2"></i>
                                         Filtros Avançados
@@ -499,7 +505,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-center w-full mt-8">
+                            <div class="flex justify-center w-full mt-8 px-4">
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10 md:place-items-center">
                                     <!-- Show message if no newsletters -->
                                     <div v-if="props.newsletters.length === 0" class="col-span-3 text-center text-gray-500 py-10">
@@ -529,12 +535,12 @@
                 <div v-if="activeTab === 'autores'" class="content-section">
                     <div class="w-full p-8">
                         <div class="flex flex-col items-center container w-full max-w-7xl mx-auto mb-8">
-                            <h1 class="text-4xl font-bold mb-4">
+                            <h1 class="text-4xl font-bold mb-4 px-4 text-center">
                                 Tornesse um Autor <i class="fad fa-bullhorn" style="font-size: 1.6rem;"></i>
                             </h1>
                             
                             <!-- Subtitle -->
-                            <p class="text-xl text-center mt-2 text-gray-700/55 mb-6 max-w-3xl">
+                            <p class="text-xl text-center mt-2 text-gray-700/55 mb-6 max-w-3xl px-4">
                                 Credencie-se no sistema para poder publicar newsletters e compartilhar seu conhecimento com a comunidade acadêmica.
                             </p>
 
@@ -544,7 +550,7 @@
                                 Me Cadastrar
                             </button>
 
-                            <div class="flex justify-center w-full mt-8">
+                            <div class="flex justify-center w-full mt-8 px-4">
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10 md:place-items-center">
                                     <!-- Show message if no authors -->
                                     <div v-if="props.authors.length === 0" class="col-span-3 text-center text-gray-500 py-10">
