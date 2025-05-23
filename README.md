@@ -40,8 +40,8 @@ Para os **administradores**:
 
 | Camada             | Ferramenta / Biblioteca        |
 | ------------------ | ------------------------------ |
-| Backend            | LIVT Stack (Node.js, LARAVEL?) |
-| Frontend           | (Vue/React?)                   |
+| Backend            | LIVT Stack (LARAVEL)           |
+| Frontend           | (Vue/Inertia)                  |
 | Banco de Dados     | MySQL                          |
 | Autenticação       | Email Magic Link + JWT         |
 | Editor de Conteúdo | Markdown + Blocos Dinâmicos    |
