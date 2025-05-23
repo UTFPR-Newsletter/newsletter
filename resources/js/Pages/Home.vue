@@ -71,10 +71,6 @@
         isMenuOpen.value = !isMenuOpen.value
     }
 
-    const goLogin = () => {
-        window.location.href = '/login';
-    }
-    
     // Function to handle scroll and show/hide sticky header
     const handleScroll = () => {
         if (mainHeader.value) {
