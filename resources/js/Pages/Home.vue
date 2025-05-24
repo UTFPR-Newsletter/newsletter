@@ -26,8 +26,14 @@
         newsletters: {
             type: Array,
             default: () => []
-        }
+        },
+        auth: {
+            type: Object,
+            default: () => ({ user: null }),
+        },
     });
+
+    console.log(props.auth.user);
     
     const subscriberEmail = ref('')
     const searchQuery = ref('')
@@ -71,10 +77,6 @@
         isMenuOpen.value = !isMenuOpen.value
     }
 
-    const goLogin = () => {
-        window.location.href = '/login';
-    }
-    
     // Function to handle scroll and show/hide sticky header
     const handleScroll = () => {
         if (mainHeader.value) {

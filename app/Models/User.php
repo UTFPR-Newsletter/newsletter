@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
     // Tabela padrão "users"
     protected $primaryKey = 'usr_id';
@@ -24,4 +25,8 @@ class User extends Model
         'usr_active',
         'represented_agent_id',
     ];
+
+    public function subscriber() {
+        return $this->hasOne(Subscriber::class, 'sub_id', 'represented_agent_id');
+    }
 }
