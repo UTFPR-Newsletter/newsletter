@@ -1,16 +1,17 @@
 <script setup>
-    import onlyWebNews from '../assets/web_background.png'
-
     import { ref } from 'vue'
-    import { Link } from '@inertiajs/vue3'
+    import { Link, router } from '@inertiajs/vue3'
+    import { toast } from 'vue3-toastify'
+    import 'vue3-toastify/dist/index.css'
     import axios from 'axios'
 
     const email = ref('')
     const password = ref('')
+    const verificationCode = ref('')
+
     const loading = ref(false)
     const error = ref('')
     const success = ref('')
-    const verificationCode = ref('')
     const showVerification = ref(false)
 
     const loginType = ref('email')
@@ -24,19 +25,9 @@
         try {
             if (loginType.value === 'email') {
                 if (!showVerification.value) {
-                    const response = await axios.post('/subscriber/simple-login', {
-                        sub_email: email.value
-                    })
-                    
-                    if (response.data.status) {
-                        success.value = response.data.message
-                        showVerification.value = true
-                    } else {
-                        error.value = response.data.message
-                    }
+                    await sendSimpleLogin();
                 } else {
-                    // TODO: Implementar verificação do código
-                    console.log('Verificando código:', verificationCode.value)
+                    await validateCode();
                 }
             } else {
                 // Implementar login com senha posteriormente
@@ -46,6 +37,41 @@
             error.value = err.response?.data?.message || 'Ocorreu um erro ao tentar fazer login'
         } finally {
             loading.value = false
+        }
+    }
+
+    const sendSimpleLogin = async() => {
+        const response = await axios.post('/subscriber/simple-login', {
+            sub_email: email.value
+        })
+        
+        if (response.data.status) {
+            success.value = response.data.message
+            showVerification.value = true
+            toast.success(response.data.message, { position: toast.POSITION.TOP_RIGHT })
+        } else {
+            error.value = response.data.message
+            toast.error(response.data.message, { position: toast.POSITION.TOP_RIGHT })
+        }
+    }
+
+    const validateCode = async () => {
+        toast.info('Validando código...', { position: toast.POSITION.TOP_RIGHT })
+
+        const response = await axios.post('/subscriber/validate-simple-login', {
+            sub_email: email.value,
+            token: verificationCode.value
+        })
+
+        if (response.data.status) {
+            success.value = response.data.message
+            toast.success(response.data.message, { position: toast.POSITION.TOP_RIGHT })
+            setTimeout(() => {
+                router.visit('/')
+            }, 1000)
+        } else {
+            error.value = response.data.message
+            toast.error(response.data.message, { position: toast.POSITION.TOP_RIGHT })
         }
     }
 

@@ -3,6 +3,10 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import 'vue3-toastify/dist/index.css'
 import Vue3Toastify from 'vue3-toastify'
+import axios from 'axios'
+
+axios.defaults.headers.common['X-CSRF-TOKEN'] =
+  document.head.querySelector('meta[name="csrf-token"]').content;
 
 // Carrega todas as Pages numa object-map
 const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })

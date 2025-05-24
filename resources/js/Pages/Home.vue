@@ -26,8 +26,14 @@
         newsletters: {
             type: Array,
             default: () => []
-        }
+        },
+        auth: {
+            type: Object,
+            default: () => ({ user: null }),
+        },
     });
+
+    console.log(props.auth.user);
     
     const subscriberEmail = ref('')
     const searchQuery = ref('')

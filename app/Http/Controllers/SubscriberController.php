@@ -9,6 +9,9 @@ use App\Http\Controllers\dao\GenericCtrl;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Subscriber;
+use App\Mail\AccessCodeMail;
+
+use Illuminate\Support\Facades\Auth;
 
 class SubscriberController extends Controller
 {
@@ -40,23 +43,72 @@ class SubscriberController extends Controller
             ], 404);
         }
 
-        // Gera um token único para o login
-        $token = Str::random(6);
-        
-        // Atualiza o assinante com o token
-        $user->usr_login_token = $token;
-        $user->usr_login_token_expires_at = now()->addHours(24); // Token válido por 24 horas
-        $user->save();
+        if(!$user->usr_login_token_expires_at > now() || is_null($user->usr_login_token)) {
+            // Gera um token único para o login
+            $token = Str::random(6);
+            
+            // Atualiza o assinante com o token
+            $user->usr_login_token = $token;
+            $user->usr_login_token_expires_at = now()->addHours(24); // Token válido por 24 horas
+            $user->save();
+        } else {
+            $token = $user->usr_login_token;
+        }
 
-        Mail::raw('Olá! Este é um teste enviado pelo Laravel.', function ($message) use ($user, $token) {
-            $message
-                ->to("fe.hatunaqueton@gmail.com")
-                ->subject('🚀 Código de acesso: ' . $token);
-        });
+        Mail::to("fe.hatunaqueton@gmail.com")
+            ->send(new AccessCodeMail($user, $token));
 
         return response()->json([
             "status" => true,
             "message" => "Foi enviado um email com um código para seu e-mail!"
+        ], 200);
+    }
+
+    public function validateSimpleLogin(Request $request) {
+        $data = $request->validate(array(
+            "sub_email" => "required|string|max:255",
+            "token" => "required|string|max:6",
+        ));
+
+        $subscriberCtrl = new GenericCtrl("Subscriber");
+        $userCtrl = new GenericCtrl("User");
+
+        $subscriber = $subscriberCtrl->getObjectByField("sub_email", $data["sub_email"]);
+        $user = $userCtrl->getObjectByFields(
+            ["usr_level", "usr_active", "represented_agent_id"],
+            [User::LEVEL_SUBSCRIBER, 1, $subscriber->sub_id]
+        );
+
+        if(!$user instanceof User) {
+            return response()->json([
+                "status" => false,
+                "message" => "Usuário não encontrado!"
+            ], 404);
+        }
+
+        if($user->usr_login_token_expires_at < now()) {
+            return response()->json([
+                "status" => false,
+                "message" => "Código de acesso expirado!"
+            ], 400);
+        }
+
+        if($user->usr_login_token != $data["token"]) {
+            return response()->json([
+                "status" => false,
+                "message" => "Código de acesso inválido!"
+            ], 400);
+        }
+
+        $user->usr_login_token = null;
+        $user->usr_login_token_expires_at = null;
+        $user->save();
+
+        Auth::login($user);
+
+        return response()->json([
+            "status" => true,
+            "message" => "Código de acesso validado com sucesso!"
         ], 200);
     }
 
