@@ -1,18 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\dao\GenericCtrl;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Livewire\Home;
+use App\Livewire\Login;
 
 //? Rotas
-Route::middleware([HandleInertiaRequests::class])->group(function(){
-    Route::get('/', [HomeController::class, 'index']);
-    Route::get('/login', fn() => Inertia::render('Login'))->name('login');
-    Route::get('/authors', fn() => Inertia::render('Authors'))->name('authors');
-});
+Route::get('/', Home::class);
+Route::get('/login', Login::class)->name('login');
+Route::post('/logout', function() {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 
 //? Code Endpoints
 Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribers.store');

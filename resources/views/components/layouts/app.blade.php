@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>WebNews</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @inertiaHead
+        @vite('resources/css/app.css')
 
         <link
             rel="stylesheet"
@@ -15,8 +14,14 @@
         >
         <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png" sizes="64x64">
 
+        @livewireStyles
     </head>
     <body class="antialiased">
-        @inertia
+        {{ $slot }}
+
+        
+        @livewireScripts
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/cdn.min.js"></script>
+        @vite('resources/js/app.js')
     </body>
 </html>
