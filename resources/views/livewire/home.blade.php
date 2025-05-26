@@ -547,10 +547,16 @@
                         </p>
 
                         <!-- Register Button -->
-                        <button class="px-6 py-3 bg-white text-lg rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 mb-2">
-                            <i class="fad fa-user-plus mr-2"></i>
-                            Me Cadastrar
-                        </button>
+                        <div>
+                            <button class="px-6 py-3 mr-2 bg-white text-lg rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 mb-2">
+                                <i class="fad fa-user-plus mr-2"></i>
+                                Me Cadastrar
+                            </button>
+                            <button class="px-6 py-3 bg-white text-lg rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 mb-2">
+                                <i class="fad fa-sign-in-alt mr-2"></i>
+                                Fazer Login
+                            </button>
+                        </div>
 
                         <div class="flex justify-center w-full mt-8 px-4">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10 md:place-items-center">
