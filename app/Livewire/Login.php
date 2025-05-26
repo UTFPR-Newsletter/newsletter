@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Illuminate\Http\Request;
+use TallStackUi\Traits\Interactions;
 
 #[Layout('components.layouts.app')]
 class Login extends Component
 {
+    use Interactions;
     public $email = '';
     public $password = '';
     public $verificationCode = '';
@@ -55,19 +56,16 @@ class Login extends Component
             'email.email' => 'Digite um e-mail válido'
         ]);
 
-        // Criar um request fake para usar o método do controller
-        $request = new Request();
-        $request->merge(['sub_email' => $this->email]);
-
         $subscriberController = new SubscriberController();
-        $response = $subscriberController->sendSimpleLoginEmail($request);
-        $data = json_decode($response->getContent(), true);
+        $result = $subscriberController->sendSimpleLoginEmailForLivewire($this->email);
 
-        if ($data['status']) {
-            $this->success = $data['message'];
+        if ($result['status']) {
+            $this->success = $result['message'];
             $this->showVerification = true;
+            $this->toast()->success($result['message'])->send();
         } else {
-            $this->error = $data['message'];
+            $this->error = $result['message'];
+            $this->toast()->error($result['message'])->send();
         }
     }
 
@@ -83,23 +81,17 @@ class Login extends Component
             'verificationCode.max' => 'O código deve ter no máximo 6 caracteres'
         ]);
 
-        // Criar um request fake para usar o método do controller
-        $request = new Request();
-        $request->merge([
-            'sub_email' => $this->email,
-            'token' => $this->verificationCode
-        ]);
-
         $subscriberController = new SubscriberController();
-        $response = $subscriberController->validateSimpleLogin($request);
-        $data = json_decode($response->getContent(), true);
+        $result = $subscriberController->validateSimpleLoginForLivewire($this->email, $this->verificationCode);
 
-        if ($data['status']) {
-            $this->success = $data['message'];
+        if ($result['status']) {
+            $this->success = $result['message'];
+            $this->toast()->success($result['message'])->send();
             // Redirecionar após 1 segundo
             $this->dispatch('redirect-home');
         } else {
-            $this->error = $data['message'];
+            $this->error = $result['message'];
+            $this->toast()->error($result['message'])->send();
         }
     }
 
@@ -121,6 +113,8 @@ class Login extends Component
         if ($user && Hash::check($this->password, $user->usr_senha) && $user->usr_active) {
             // Login bem-sucedido
             Auth::login($user);
+            $this->success = 'Login realizado com sucesso!';
+            $this->toast()->success('Login realizado com sucesso!')->send();
             
             // Redirecionar baseado no nível do usuário
             switch ($user->usr_level) {
@@ -134,6 +128,7 @@ class Login extends Component
             }
         } else {
             $this->error = 'Credenciais inválidas ou conta inativa';
+            $this->toast()->error('Credenciais inválidas ou conta inativa')->send();
         }
     }
 

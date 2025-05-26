@@ -6,22 +6,23 @@
         <title>WebNews</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        @vite('resources/css/app.css')
-
         <link
             rel="stylesheet"
             href="{{ asset('css/font-awesome-pro-master.min.css') }}?v=0.0.1"
         >
         <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png" sizes="64x64">
 
+        <tallstackui:script />
         @livewireStyles
+        @vite('resources/css/app.css')
     </head>
     <body class="antialiased">
+        <x-ts-dialog />
+        <x-ts-toast />
+
         {{ $slot }}
 
-        
         @livewireScripts
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/cdn.min.js"></script>
         @vite('resources/js/app.js')
     </body>
 </html>

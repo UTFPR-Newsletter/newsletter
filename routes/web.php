@@ -9,10 +9,12 @@ use App\Http\Controllers\dao\GenericCtrl;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Livewire\Home;
 use App\Livewire\Login;
+use App\Livewire\SubscriberProfile;
 
 //? Rotas
 Route::get('/', Home::class);
 Route::get('/login', Login::class)->name('login');
+Route::get('/profile', SubscriberProfile::class)->name('profile');
 Route::post('/logout', function() {
     Auth::logout();
     return redirect('/');

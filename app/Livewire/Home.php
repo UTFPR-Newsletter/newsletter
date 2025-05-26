@@ -5,12 +5,17 @@ namespace App\Livewire;
 use App\Models\Author;
 use App\Models\Newsletter;
 use App\Models\Subscriber;
+use App\Http\Controllers\SubscriberController;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use TallStackUi\Traits\Interactions;
+use Illuminate\Support\Facades\Auth;
 
 #[Layout('components.layouts.app')]
 class Home extends Component
 {
+    use Interactions;
+
     public $subscriberEmail = '';
     public $searchQuery = '';
     public $loading = false;
@@ -26,29 +31,43 @@ class Home extends Component
 
         $this->loading = true;
 
-        try {
-            // Check if email already exists
-            $existingSubscriber = Subscriber::where('sub_email', $this->subscriberEmail)->first();
-            
-            if ($existingSubscriber) {
-                session()->flash('error', 'Este e-mail já está cadastrado!');
-                $this->loading = false;
-                return;
-            }
+        $subscriberController = new SubscriberController();
+        $result = $subscriberController->storeForLivewire($this->subscriberEmail);
 
-            // Create new subscriber
-            Subscriber::create([
-                'sub_email' => $this->subscriberEmail
-            ]);
-
-            session()->flash('success', 'E-mail cadastrado com sucesso! Você receberá nossas newsletters.');
+        if ($result['status']) {
+            $this->toast()->success($result['message'])->send();
             $this->subscriberEmail = '';
-            
-        } catch (\Exception $e) {
-            session()->flash('error', 'Erro ao cadastrar e-mail. Tente novamente.');
+        } else {
+            $this->toast()->error($result['message'])->send();
         }
 
         $this->loading = false;
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+        
+        $this->toast()->success('Logout realizado com sucesso!')->send();
+        
+        return redirect('/');
+    }
+
+    public function sendMagicLogin()
+    {
+        return redirect()->route('profile');
+    }
+
+    public function editProfile()
+    {
+        if (!Auth::user()) {
+            $this->toast()->error('Usuário não encontrado!')->send();
+            return;
+        }
+
+        return redirect()->route('profile');
     }
 
     public function render()
@@ -98,7 +117,8 @@ class Home extends Component
 
         return view('livewire.home', [
             'authors' => $authors,
-            'newsletters' => $newsletters
+            'newsletters' => $newsletters,
+            'user' => Auth::user()
         ]);
     }
 }

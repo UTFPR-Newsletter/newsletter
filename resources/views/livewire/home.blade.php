@@ -20,7 +20,7 @@
             <div class="logo-container mr-4">
                 <div class="logo-box">
                     <div class="logo-front flex items-center justify-center">
-                        <img src="{{ asset('images/logo_only_web.png') }}" alt="WebNews Logo" class="h-10" />
+                        <img src="{{ asset('images/logo_only_web.png') }}" alt="WebNews Logo" class="h-8 mt-1" />
                     </div>
                     <div class="logo-back">
                         <img src="{{ asset('images/logo_only_web_white.png') }}" alt="WebNews Logo" class="h-8" />
@@ -51,29 +51,76 @@
             </nav>
         </div>
         
-        <!-- Spider button with dropdown -->
+        <!-- User button with dropdown -->
         <div class="relative">
-            <button @click="isMenuOpen = !isMenuOpen" class="p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200">
-                <i class="fad fa-spider-black-widow text-xl"></i>
-            </button>
+            @if($user)
+                <!-- Logged in user button -->
+                <button @click="isMenuOpen = !isMenuOpen" class="flex items-center space-x-3 p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-50 transition-colors duration-200 border border-gray-200">
+                    <!-- User avatar with initial -->
+                    <div class="w-8 h-8 bg-gray-800 text-white rounded-md flex items-center justify-center font-semibold text-sm">
+                        {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                    </div>
+                    <span class="text-sm font-medium truncate max-w-24">{{ explode('@', $user->usr_email)[0] }}</span>
+                    <i class="fad fa-chevron-down text-xs mr-6"></i>
+                </button>
+            @else
+                <!-- Guest spider button -->
+                <button @click="isMenuOpen = !isMenuOpen" class="p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200">
+                    <i class="fad fa-spider-black-widow text-xl"></i>
+                </button>
+            @endif
             
             <!-- Dropdown menu -->
             <div x-show="isMenuOpen"
                     @click.outside="isMenuOpen = false"
                     x-transition
                     x-cloak
-                    class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                <div class="px-4 py-2 flex items-center border-b border-gray-100">
-                    <i class="fad fa-user-circle text-gray-700 text-xl mr-2"></i>
-                    <span class="text-gray-800 font-medium">Perfil</span>
-                </div>
-                <div class="p-3">
-                    <a href="{{ route('login') }}"
-                        class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
-                        <i class="fad fa-sign-in mr-2"></i>
-                        Fazer Login
-                    </a>
-                </div>
+                    class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-200">
+                @if($user)
+                    <!-- Logged in user menu -->
+                    <div class="px-4 py-3 border-b border-gray-100">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gray-800 text-white rounded-lg flex items-center justify-center font-semibold text-lg">
+                                {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">{{ $user->usr_email }}</p>
+                                <p class="text-xs text-gray-500 capitalize">{{ $user->usr_level }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="py-2">
+                        <button wire:click="sendMagicLogin" class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                            <i class="fad fa-magic text-blue-500 mr-3"></i>
+                            Login Mágico
+                        </button>
+                        <button wire:click="editProfile" class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                            <i class="fad fa-user-edit text-green-500 mr-3"></i>
+                            Editar Dados
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 py-2">
+                        <button wire:click="logout" class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center">
+                            <i class="fad fa-sign-out text-red-500 mr-3"></i>
+                            Sair
+                        </button>
+                    </div>
+                @else
+                    <!-- Guest menu -->
+                    <div class="px-4 py-2 flex items-center border-b border-gray-100">
+                        <i class="fad fa-user-circle text-gray-700 text-xl mr-2"></i>
+                        <span class="text-gray-800 font-medium">Perfil</span>
+                    </div>
+                    <div class="p-3">
+                        <a href="{{ route('login') }}"
+                            class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+                            <i class="fad fa-sign-in mr-2"></i>
+                            Fazer Login
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -92,20 +139,20 @@
                 
                 <!-- Navigation menu -->
                 <nav class="flex space-x-6" aria-label="Navigation menu">
-                    <a href="#" 
-                        @click.prevent="activeTab = 'sobre'" 
+                    <a href="#"
+                        @click.prevent="activeTab = 'sobre'"
                         x-bind:class="activeTab === 'sobre' ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium'"
                         class="transition-all duration-200 relative nav-link">
                         Sobre
                     </a>
-                    <a href="#" 
-                        @click.prevent="activeTab = 'newsletters'" 
+                    <a href="#"
+                        @click.prevent="activeTab = 'newsletters'"
                         x-bind:class="activeTab === 'newsletters' ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium'"
                         class="transition-all duration-200 relative nav-link">
                         Newsletters
                     </a>
-                    <a href="#" 
-                        @click.prevent="activeTab = 'autores'" 
+                    <a href="#"
+                        @click.prevent="activeTab = 'autores'"
                         x-bind:class="activeTab === 'autores' ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium'"
                         class="transition-all duration-200 relative nav-link">
                         Autores
@@ -113,29 +160,78 @@
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <!-- Spider button with dropdown -->
+                <!-- User button with dropdown -->
                 <div class="relative">
-                    <button @click="isMenuOpen = !isMenuOpen" class="p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200">
-                        <i class="fad fa-spider-black-widow text-2xl"></i>
-                    </button>
+                    @if($user)
+                        <!-- Logged in user button -->
+                        <button @click="isMenuOpen = !isMenuOpen" class="flex items-center space-x-3 p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-50 transition-colors duration-200 border border-gray-200">
+                            <!-- User avatar with initial -->
+                            <div class="w-10 h-10 bg-gray-800 text-white rounded-lg flex items-center justify-center font-semibold">
+                                {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                            </div>
+                            <span class="text-sm font-medium truncate max-w-32">{{ explode('@', $user->usr_email)[0] }}</span>
+                            <i class="fad fa-chevron-down text-sm"></i>
+                        </button>
+                    @else
+                        <!-- Guest spider button -->
+                        <button @click="isMenuOpen = !isMenuOpen" class="p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200">
+                            <i class="fad fa-spider-black-widow text-2xl"></i>
+                        </button>
+                    @endif
                     
                     <!-- Dropdown menu -->
-                    <div x-show="isMenuOpen" 
+                    <div x-show="isMenuOpen"
                             @click.outside="isMenuOpen = false"
                             x-transition
                             x-cloak
-                            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                        <div class="px-4 py-2 flex items-center border-b border-gray-100">
-                            <i class="fad fa-user-circle text-gray-700 text-xl mr-2"></i>
-                            <span class="text-gray-800 font-medium">Perfil</span>
-                        </div>
-                        <div class="p-3">
-                            <a href="{{ route('login') }}"
-                                class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:cursor-pointer hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
-                                <i class="fad fa-sign-in mr-2"></i>
-                                Fazer Login
-                            </a>
-                        </div>
+                            class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-200">
+                        @if($user)
+                            <!-- Logged in user menu -->
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-gray-800 text-white rounded-lg flex items-center justify-center font-semibold text-lg">
+                                        {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $user->usr_email }}</p>
+                                        <p class="text-xs text-gray-500 capitalize">{{ $user->usr_level }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="py-2">
+                                <button wire:click="sendMagicLogin"
+                                    class="w-full px-4 py-2 text-left text-sm font-semibold text-gray-700/60 hover:cursor-pointer hover:bg-blue-500/10 flex items-center">
+                                    <i class="fad fa-magic text-blue-500 mr-3"></i>
+                                    Login Mágico
+                                </button>
+                                <button
+                                    class="w-full px-4 py-2 text-left text-sm font-semibold text-gray-700/60 hover:cursor-pointer hover:bg-green-500/10 flex items-center">
+                                    <i class="fad fa-user-edit text-green-500 mr-3"></i>
+                                    Editar Dados
+                                </button>
+                            </div>
+                            
+                            <div class="border-t border-gray-100 py-2">
+                                <button wire:click="logout" class="w-full px-4 py-2 text-left text-sm text-red-600 hover:cursor-pointer hover:bg-red-50 flex items-center">
+                                    <i class="fad fa-sign-out text-red-500 mr-3"></i>
+                                    Sair
+                                </button>
+                            </div>
+                        @else
+                            <!-- Guest menu -->
+                            <div class="px-4 py-2 flex items-center border-b border-gray-100">
+                                <i class="fad fa-user-circle text-gray-700 text-xl mr-2"></i>
+                                <span class="text-gray-800 font-medium">Perfil</span>
+                            </div>
+                            <div class="p-3">
+                                <a href="{{ route('login') }}"
+                                    class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:cursor-pointer hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+                                    <i class="fad fa-sign-in mr-2"></i>
+                                    Fazer Login
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -143,51 +239,51 @@
 
         <!-- Hero section -->
         <div class="container mx-auto px-4 py-12 pt-4 text-center">
-            <!-- Circular logo background - white with inner shadow -->
-            <div class="inline-block bg-white p-8 rounded-full shadow-inner border border-gray-300">
-                <img src="{{ asset('images/spider_logo_transparent.png') }}" alt="Logo" class="h-64 mx-auto spider-logo" />
-            </div>
-            <!-- System name -->
-            <h1 class="mt-10 text-3xl font-semibold italic">WebNews</h1>
-            <!-- Description text -->
-            <p class="mt-3 text-lg text-gray-600/55">
-                Conecte-se a teia de conhecimento que vem crescendo...
-            </p>
-            
+            @if(!$user)
+                <!-- Circular logo background - white with inner shadow -->
+                <div class="inline-block bg-white p-8 rounded-full shadow-inner border border-gray-300">
+                    <img src="{{ asset('images/spider_logo_transparent.png') }}" alt="Logo" class="h-48 mx-auto spider-logo" />
+                </div>
+                <!-- System name -->
+                <h1 class="mt-10 text-3xl font-semibold italic">WebNews</h1>
+                <!-- Description text -->
+                <p class="mt-3 text-lg text-gray-600/55">
+                    Conecte-se a teia de conhecimento que vem crescendo...
+                </p>
+                
+                <!-- Email input + Subscribe button styled with Tailwind - Only for guests -->
+                <div class="mt-12 mb-8 flex justify-center">
+                    <form wire:submit.prevent="subscribe" class="flex w-full max-w-3xl">
+                        <!-- Icon Prepend -->
+                        <div class="flex-shrink-0">
+                            <span class="flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700/40 border border-gray-300 border-r-0 rounded-l-md h-full">
+                                <i class="fad fa-envelope text-xl"></i>
+                            </span>
+                        </div>
+                        <!-- Input Field -->
+                        <input
+                            type="email"
+                            wire:model="subscriberEmail"
+                            placeholder="Digite seu e-mail"
+                            class="flex-1 px-4 py-3 text-lg bg-white border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            required
+                        />
+                        <!-- Subscribe Button -->
+                        <button
+                            type="submit"
+                            wire:loading.attr="disabled"
+                            class="px-6 py-3 bg-white text-lg rounded-r-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 border-l-0 disabled:opacity-50">
+                            <span wire:loading.remove>Assinar</span>
+                            <span wire:loading>Assinando...</span>
+                        </button>
+                    </form>
+                </div>
 
-            
-            <!-- Email input + Subscribe button styled with Tailwind -->
-            <div class="mt-12 mb-8 flex justify-center">
-                <form wire:submit.prevent="subscribe" class="flex w-full max-w-3xl">
-                    <!-- Icon Prepend -->
-                    <div class="flex-shrink-0">
-                        <span class="flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700/40 border border-gray-300 border-r-0 rounded-l-md h-full">
-                            <i class="fad fa-envelope text-xl"></i>
-                        </span>
-                    </div>
-                    <!-- Input Field -->
-                    <input
-                        type="email"
-                        wire:model="subscriberEmail"
-                        placeholder="Digite seu e-mail"
-                        class="flex-1 px-4 py-3 text-lg bg-white border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                        required
-                    />
-                    <!-- Subscribe Button -->
-                    <button 
-                        type="submit"
-                        wire:loading.attr="disabled"
-                        class="px-6 py-3 bg-white text-lg rounded-r-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 border-l-0 disabled:opacity-50">
-                        <span wire:loading.remove>Assinar</span>
-                        <span wire:loading>Assinando...</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Partnership credit - centered -->
-            <div class="text-center mb-8">
-                <h1 class="text-xl font-semibold italic text-gray-700/55">Uma parceria entre CASIS e TypeX @ UTFPR-FB ❤️</h1>
-            </div>
+                <!-- Partnership credit - centered -->
+                <div class="text-center mb-8">
+                    <h1 class="text-xl font-semibold italic text-gray-700/55">Uma parceria entre CASIS e TypeX @ UTFPR-FB ❤️</h1>
+                </div>
+            @endif
         </div>
 
         <!-- Curved transition to white section -->
@@ -215,7 +311,7 @@
         </div>
     </div>
 
-    <!-- Bottom white section -->   
+    <!-- Bottom white section -->
     <div class="bg-white flex-grow">
         <div class="w-full pt-8">
             <!-- Tab content sections -->
@@ -565,7 +661,7 @@
     <script>
         function webnewsPage() {
             return {
-                activeTab: 'sobre',
+                activeTab: '{{ $user ? 'newsletters' : 'sobre' }}',
                 isMenuOpen: false,
                 showStickyHeader: false,
                 showBackToTop: false,
