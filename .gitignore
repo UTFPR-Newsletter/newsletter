@@ -21,3 +21,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Security sensitive files
+/app/Http/Controllers/utils/TripleDES.php
+/app/Http/Controllers/utils/Password.php

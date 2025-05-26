@@ -99,33 +99,26 @@ class Login extends Component
     {
         $this->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6'
+            'password' => 'required|min:3'
         ], [
             'email.required' => 'O e-mail é obrigatório',
             'email.email' => 'Digite um e-mail válido',
             'password.required' => 'A senha é obrigatória',
-            'password.min' => 'A senha deve ter pelo menos 6 caracteres'
+            'password.min' => 'A senha deve ter pelo menos 3 caracteres'
         ]);
 
         // Buscar usuário pelo email
         $user = User::where('usr_email', $this->email)->first();
 
-        if ($user && Hash::check($this->password, $user->usr_senha) && $user->usr_active) {
+        if ($user->usr_password === $this->password && $user->usr_active === 1) {
             // Login bem-sucedido
             Auth::login($user);
             $this->success = 'Login realizado com sucesso!';
             $this->toast()->success('Login realizado com sucesso!')->send();
-            
-            // Redirecionar baseado no nível do usuário
-            switch ($user->usr_level) {
-                case User::LEVEL_ADMIN:
-                    return redirect()->intended('/admin');
-                case User::LEVEL_AUTHOR:
-                    return redirect()->intended('/author');
-                case User::LEVEL_SUBSCRIBER:
-                default:
-                    return redirect()->intended('/');
-            }
+
+            // Redirecionar para a página inicial
+            return redirect()->intended('/');
+
         } else {
             $this->error = 'Credenciais inválidas ou conta inativa';
             $this->toast()->error('Credenciais inválidas ou conta inativa')->send();

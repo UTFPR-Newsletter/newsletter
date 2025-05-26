@@ -10,11 +10,14 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Livewire\Home;
 use App\Livewire\Login;
 use App\Livewire\SubscriberProfile;
+use App\Livewire\MagicLoginAuth;
 
 //? Rotas
 Route::get('/', Home::class);
 Route::get('/login', Login::class)->name('login');
 Route::get('/profile', SubscriberProfile::class)->name('profile');
+Route::get('/profile/magic-login-auth', MagicLoginAuth::class)->name('profile.magic-login-auth');
+
 Route::post('/logout', function() {
     Auth::logout();
     return redirect('/');

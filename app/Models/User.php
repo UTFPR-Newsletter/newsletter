@@ -20,9 +20,12 @@ class User extends Authenticatable
     // Campos mass assignable
     protected $fillable = [
         'usr_email',
-        'usr_senha',
+        'usr_password',
         'usr_level',
         'usr_active',
+        'usr_has_magic_link',
+        'usr_magic_link',
+        'usr_magic_link_expires_at',
         'represented_agent_id',
     ];
 

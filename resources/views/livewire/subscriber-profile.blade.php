@@ -129,9 +129,21 @@
                                 </div>
                                 <button
                                     wire:click="sendMagicLogin"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700">
-                                    <i class="fad fa-magic mr-2"></i>
-                                    Ativar Login Mágico
+                                    wire:loading.attr="disabled"
+                                    wire:target="sendMagicLogin"
+                                    class="inline-flex items-center px-4 py-2 hover:cursor-pointer border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <div class="inline-flex items-center">
+                                        <!-- Estado normal -->
+                                        <span wire:loading.remove wire:target="sendMagicLogin">
+                                            <i class="fad fa-magic mr-2"></i>
+                                            {{ $user->usr_has_magic_link ? 'Desativar login mágico' : 'Ativar login mágico' }}
+                                        </span>
+                                        <!-- Estado de loading -->
+                                        <span wire:loading wire:target="sendMagicLogin">
+                                            <i class="fad fa-spinner fa-spin mr-2"></i>
+                                            Aguarde...
+                                        </span>
+                                    </div>
                                 </button>
                             </div>
                             <div class="w-76 mt-6 flex items-center border-0 justify-center">

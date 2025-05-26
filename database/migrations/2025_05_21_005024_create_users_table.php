@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
 
             // Credenciais e nível
             $table->string('usr_email')->unique();
-            $table->string('usr_senha')->nullable();
+            $table->string('usr_password')->nullable();
             $table->string('usr_level');
 
             // Status de ativo/inativo
