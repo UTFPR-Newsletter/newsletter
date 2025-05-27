@@ -16,7 +16,7 @@ use App\Livewire\MagicLoginAuth;
 Route::get('/', Home::class);
 Route::get('/login', Login::class)->name('login');
 Route::get('/profile', SubscriberProfile::class)->name('profile');
-Route::get('/profile/magic-login-auth', MagicLoginAuth::class)->name('profile.magic-login-auth');
+Route::get('/magic-login/{token}', MagicLoginAuth::class)->name('magic.login.auth');
 
 Route::post('/logout', function() {
     Auth::logout();

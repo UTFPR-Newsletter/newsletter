@@ -7,15 +7,23 @@
     <!-- System name -->
     <h1 class="mt-10 text-3xl font-semibold italic">WebNews</h1>
 
-    <!-- Description text -->
-    <p class="mt-3 text-lg text-gray-600/55">
-        Autenticando sua conexão...
-    </p>
+    @if($error)
+        <!-- Error message -->
+        <div class="mt-6 text-red-600 text-lg">
+            <i class="fad fa-exclamation-circle mr-2"></i>
+            {{ $error }}
+        </div>
+    @else
+        <!-- Description text -->
+        <p class="mt-3 text-lg text-gray-600/55">
+            Autenticando sua conexão...
+        </p>
 
-    <!-- Loading spinner -->
-    <div class="mt-8">
-        <i class="fad fa-spinner-third fa-spin text-4xl text-gray-800"></i>
-    </div>
+        <!-- Loading spinner -->
+        <div class="mt-8">
+            <i class="fad fa-spinner-third fa-spin text-4xl text-gray-800"></i>
+        </div>
+    @endif
 
     <style>
         .shadow-inner {

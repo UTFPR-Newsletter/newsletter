@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Subscriber;
 use App\Mail\AccessCodeMail;
+use App\Mail\MagicLinkMail;
+use App\Http\Controllers\Utils\TripleDES;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -90,6 +92,32 @@ class SubscriberController extends Controller
                 ];
             }
 
+            // Se o usuário tem login mágico ativo
+            if ($user->usr_has_magic_link) {
+                // Cria o payload com o ID do usuário e timestamp
+                $payload = json_encode([
+                    'user_id' => $user->usr_id,
+                    'created_at' => now()->format('Y-m-d H:i:s')
+                ]);
+
+                // Criptografa o payload
+                $tripleDES = new TripleDES();
+                $token = $tripleDES->encrypt($payload);
+
+                // Gera a URL mágica
+                $magicUrl = route('magic.login.auth', ['token' => $token]);
+
+                // Envia o email com a URL mágica
+                Mail::to($user->usr_email)
+                    ->send(new MagicLinkMail($user, $magicUrl));
+
+                return [
+                    "status" => true,
+                    "message" => "Foi enviado um link mágico para seu e-mail!"
+                ];
+            }
+
+            // Caso contrário, usa o login por código
             if(!$user->usr_login_token_expires_at > now() || is_null($user->usr_login_token)) {
                 // Gera um token único para o login
                 $token = Str::random(6);
@@ -102,7 +130,7 @@ class SubscriberController extends Controller
                 $token = $user->usr_login_token;
             }
 
-            Mail::to("fe.hatunaqueton@gmail.com")
+            Mail::to($user->usr_email)
                 ->send(new AccessCodeMail($user, $token));
 
             return [
