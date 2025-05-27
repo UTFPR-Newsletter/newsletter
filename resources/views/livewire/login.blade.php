@@ -35,7 +35,7 @@
             @endif
 
             <!-- Verification Code Field -->
-            @if($showVerification)
+            @if($showVerification && !$hasMagicLink)
                 <div class="flex flex-row mb-4">
                     <div class="p-3 bg-gray-200/50 rounded-l-md flex items-center pointer-events-none">
                         <i class="fad fa-envelope-open-text text-sm text-gray-600/70"></i>
@@ -48,6 +48,14 @@
                         required
                         maxlength="6"
                     />
+                </div>
+            @endif
+
+            @if($showVerification && $hasMagicLink)
+                <div class="p-4 pt-0 bg-gray-100 rounded-lg text-center">
+                    <i class="fad fa-envelope-open-magic text-3xl text-gray-600 mt-0 mb-3"></i>
+                    <p class="text-gray-700">Um link mágico foi enviado para seu email.</p>
+                    <p class="text-sm text-gray-500 mt-2 mb-4">Acesse seu email e clique no link para fazer login automaticamente.</p>
                 </div>
             @endif
 
@@ -112,24 +120,26 @@
                 @endif
 
                 <!-- Botão Principal (Login/Verificar) -->
-                <button
-                    type="submit"
-                    wire:loading.attr="disabled"
-                    class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <span wire:loading.remove>
-                        <i class="fad fa-sign-in mr-2 text-xs"></i>
-                        @if($showVerification)
-                            Verificar
-                        @else
-                            Login
-                        @endif
-                    </span>
-                    <span wire:loading>
-                        <i class="fas fa-spinner fa-spin mr-2 text-xs"></i>
-                        Enviando
-                    </span>
-                </button>
+                @if(!($showVerification && $hasMagicLink))
+                    <button
+                        type="submit"
+                        wire:loading.attr="disabled"
+                        class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <span wire:loading.remove>
+                            <i class="fad fa-sign-in mr-2 text-xs"></i>
+                            @if($showVerification)
+                                Verificar
+                            @else
+                                Login
+                            @endif
+                        </span>
+                        <span wire:loading>
+                            <i class="fas fa-spinner fa-spin mr-2 text-xs"></i>
+                            Enviando
+                        </span>
+                    </button>
+                @endif
             </div>
         </form>
 

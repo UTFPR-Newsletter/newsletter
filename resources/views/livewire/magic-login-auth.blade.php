@@ -13,15 +13,32 @@
             <i class="fad fa-exclamation-circle mr-2"></i>
             {{ $error }}
         </div>
-    @else
-        <!-- Description text -->
-        <p class="mt-3 text-lg text-gray-600/55">
-            Autenticando sua conexão...
+        <!-- Botão para voltar -->
+        <a href="{{ route('login') }}" class="mt-4 px-6 py-2 bg-white rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold transition-colors duration-200 inline-flex items-center">
+            <i class="fad fa-arrow-left mr-2"></i>
+            Voltar para o login
+        </a>
+    @elseif($isSuccess)
+        <!-- Success message -->
+        <div class="mt-6 text-green-600 text-lg animate-fade-in">
+            <i class="fad fa-check-circle mr-2"></i>
+            Login realizado com sucesso!
+        </div>
+        <p class="mt-2 text-gray-600/55">
+            Redirecionando...
         </p>
-
-        <!-- Loading spinner -->
-        <div class="mt-8">
-            <i class="fad fa-spinner-third fa-spin text-4xl text-gray-800"></i>
+    @else
+        <!-- Processing message -->
+        <div class="mt-6">
+            @if($isProcessing)
+                <div class="text-gray-800 text-lg mb-3">
+                    <i class="fad fa-shield-check mr-2"></i>
+                    Verificando credenciais...
+                </div>
+            @endif
+            <div class="flex items-center justify-center">
+                <i class="fad fa-spinner-third fa-spin text-4xl text-gray-800"></i>
+            </div>
         </div>
     @endif
 
@@ -45,6 +62,21 @@
 
         .fa-spin {
             animation: spin 1s linear infinite;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-out forwards;
         }
     </style>
 </div>

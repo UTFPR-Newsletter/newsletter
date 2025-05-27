@@ -23,6 +23,7 @@ class Login extends Component
     public $success = '';
     public $showVerification = false;
     public $loginType = 'email'; // 'email' ou 'password'
+    public $hasMagicLink = false;
 
     public function handleSubmit()
     {
@@ -55,6 +56,12 @@ class Login extends Component
             'email.required' => 'O e-mail é obrigatório',
             'email.email' => 'Digite um e-mail válido'
         ]);
+
+        // Verifica se o usuário tem login mágico ativo
+        $user = User::where('usr_email', $this->email)->first();
+        if ($user && $user->usr_has_magic_link) {
+            $this->hasMagicLink = true;
+        }
 
         $subscriberController = new SubscriberController();
         $result = $subscriberController->sendSimpleLoginEmailForLivewire($this->email);

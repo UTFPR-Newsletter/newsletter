@@ -25,4 +25,4 @@ class MagicLinkMail extends Mailable
         return $this->view('emails.magic-link')
                     ->subject('Seu Link Mágico de Acesso - WebNews');
     }
-} 
+}

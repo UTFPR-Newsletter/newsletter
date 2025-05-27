@@ -97,7 +97,7 @@ class SubscriberController extends Controller
                 // Cria o payload com o ID do usuário e timestamp
                 $payload = json_encode([
                     'user_id' => $user->usr_id,
-                    'created_at' => now()->format('Y-m-d H:i:s')
+                    'created_at' => now()->format('Y-m-d H:i:s') // Token válido por 2 dias
                 ]);
 
                 // Criptografa o payload
@@ -106,6 +106,10 @@ class SubscriberController extends Controller
 
                 // Gera a URL mágica
                 $magicUrl = route('magic.login.auth', ['token' => $token]);
+
+                $userCtrl->update($user->usr_id, [
+                    "usr_magic_link_url" => $magicUrl
+                ]);
 
                 // Envia o email com a URL mágica
                 Mail::to($user->usr_email)
@@ -140,7 +144,7 @@ class SubscriberController extends Controller
         } catch (\Exception $e) {
             return [
                 "status" => false,
-                "message" => "Erro interno. Tente novamente."
+                "message" => "Erro interno. Tente novamente." . $e->getTraceAsString()
             ];
         }
     }

@@ -16,12 +16,15 @@ class MagicLoginAuth extends Component
 
     public $token;
     public $error = null;
+    public $isProcessing = true;
+    public $isSuccess = false;
 
     public function mount($token = null)
     {
         $this->token = $token;
 
         if ($this->token) {
+            sleep(5);
             $this->authenticateWithToken();
         }
     }
@@ -36,13 +39,15 @@ class MagicLoginAuth extends Component
 
             if (!$data || !isset($data['user_id']) || !isset($data['created_at'])) {
                 $this->error = "Token inválido";
+                $this->isProcessing = false;
                 return;
             }
 
-            // Verifica se o token não expirou (24 horas)
+            // Verifica se o token não expirou (48 horas)
             $createdAt = \Carbon\Carbon::parse($data['created_at']);
-            if ($createdAt->diffInHours(now()) > 24) {
+            if ($createdAt->diffInHours(now()) > 48) {
                 $this->error = "Token expirado";
+                $this->isProcessing = false;
                 return;
             }
 
@@ -50,18 +55,25 @@ class MagicLoginAuth extends Component
             $user = User::find($data['user_id']);
             if (!$user || !$user->usr_has_magic_link) {
                 $this->error = "Usuário não encontrado ou login mágico desativado";
+                $this->isProcessing = false;
                 return;
             }
-
+            
             // Faz o login
             Auth::login($user);
             
-            // Redireciona para a home
-            $this->toast()->success('Login realizado com sucesso!')->send();
-            return redirect()->route('home');
+            // Marca como sucesso e aguarda mais 1 segundo antes de redirecionar
+            $this->isProcessing = false;
+            $this->isSuccess = true;
+            
+            // Envia o toast e redireciona após 1 segundo
+            $this->toast()->success('Login realizado com sucesso!')->flash()->send();
+            sleep(5);
+            return redirect('/');
 
         } catch (\Exception $e) {
             $this->error = "Erro ao processar o token";
+            $this->isProcessing = false;
         }
     }
 
