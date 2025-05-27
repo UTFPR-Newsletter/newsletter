@@ -32,7 +32,7 @@ class Home extends Component
         $this->loading = true;
 
         $subscriberController = new SubscriberController();
-        $result = $subscriberController->storeForLivewire($this->subscriberEmail);
+        $result = $subscriberController->store($this->subscriberEmail);
 
         if ($result['status']) {
             $this->toast()->success($result['message'])->send();

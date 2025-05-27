@@ -66,32 +66,40 @@
 
                 <!-- Tabs -->
                 <div class="border-b border-gray-200">
-                    <nav class="-mb-px flex space-x-8">
+                    <div class="flex justify-between items-center">
+                        <nav class="-mb-px flex space-x-8">
+                            <button
+                                @click="activeTab = 'magic-login'"
+                                :class="{'border-gray-800 text-gray-800': activeTab === 'magic-login',
+                                        'border-transparent text-gray-500 hover:text-gray-700 hover:cursor-pointer hover:border-gray-300': activeTab !== 'magic-login'}"
+                                class="py-4 px-1 border-b-2 font-medium text-sm">
+                                <i class="fad fa-magic mr-2"></i>
+                                Login Mágico
+                            </button>
+                            <button
+                                @click="activeTab = 'edit-profile'"
+                                :class="{'border-gray-800 text-gray-800': activeTab === 'edit-profile',
+                                        'border-transparent text-gray-500 hover:text-gray-700 hover:cursor-pointer hover:border-gray-300': activeTab !== 'edit-profile'}"
+                                class="py-4 px-1 border-b-2 font-medium text-sm">
+                                <i class="fad fa-user-edit mr-2"></i>
+                                Editar Perfil
+                            </button>
+                            <button
+                                @click="activeTab = 'password'"
+                                :class="{'border-gray-800 text-gray-800': activeTab === 'password',
+                                        'border-transparent text-gray-500 hover:text-gray-700 hover:cursor-pointer hover:border-gray-300': activeTab !== 'password'}"
+                                class="py-4 px-1 border-b-2 font-medium text-sm">
+                                <i class="fad fa-lock mr-2"></i>
+                                Senha
+                            </button>
+                        </nav>
                         <button
-                            @click="activeTab = 'magic-login'"
-                            :class="{'border-gray-800 text-gray-800': activeTab === 'magic-login',
-                                    'border-transparent text-gray-500 hover:text-gray-700 hover:cursor-pointer hover:border-gray-300': activeTab !== 'magic-login'}"
-                            class="py-4 px-1 border-b-2 font-medium text-sm">
-                            <i class="fad fa-magic mr-2"></i>
-                            Login Mágico
+                            wire:click="logout"
+                            class="py-4 px-1 border-b-2 font-medium text-sm border-transparent text-red-600 hover:text-red-700 hover:cursor-pointer hover:border-red-600">
+                            <i class="fad fa-sign-out mr-2"></i>
+                            Sair
                         </button>
-                        <button
-                            @click="activeTab = 'edit-profile'"
-                            :class="{'border-gray-800 text-gray-800': activeTab === 'edit-profile',
-                                    'border-transparent text-gray-500 hover:text-gray-700 hover:cursor-pointer hover:border-gray-300': activeTab !== 'edit-profile'}"
-                            class="py-4 px-1 border-b-2 font-medium text-sm">
-                            <i class="fad fa-user-edit mr-2"></i>
-                            Editar Perfil
-                        </button>
-                        <button
-                            @click="activeTab = 'password'"
-                            :class="{'border-gray-800 text-gray-800': activeTab === 'password',
-                                    'border-transparent text-gray-500 hover:text-gray-700 hover:cursor-pointer hover:border-gray-300': activeTab !== 'password'}"
-                            class="py-4 px-1 border-b-2 font-medium text-sm">
-                            <i class="fad fa-lock mr-2"></i>
-                            Senha
-                        </button>
-                    </nav>
+                    </div>
                 </div>
 
                 <!-- Tab content -->
@@ -157,17 +165,29 @@
                         <div class="flex items-start space-x-8">
                             <div class="flex-1">
                                 <h3 class="text-lg font-medium text-gray-900 mb-4">Editar Informações do Perfil</h3>
-                                <form class="space-y-6">
+                                <form wire:submit="updateProfile" class="space-y-6">
                                     <div>
                                         <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
-                                        <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            id="name"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                                            wire:model="editProfileForm.usr_name"
+                                        >
                                     </div>
                                     <div>
                                         <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
-                                        <input type="email" name="email" id="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            id="email"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                                            wire:model="editProfileForm.usr_email"
+                                        >
                                     </div>
                                     <div>
-                                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700">
+                                        <button type="submit" class="inline-flex hover:cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700">
                                             <i class="fad fa-save mr-2"></i>
                                             Salvar Alterações
                                         </button>
@@ -185,26 +205,96 @@
                         <div class="flex items-start space-x-8">
                             <div class="flex-1">
                                 <h3 class="text-lg font-medium text-gray-900 mb-4">Alterar Senha</h3>
-                                <form class="space-y-6">
-                                    <div>
-                                        <label for="current_password" class="block text-sm font-medium text-gray-700">Senha Atual</label>
-                                        <input type="password" name="current_password" id="current_password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
-                                    </div>
-                                    <div>
+                                <form wire:submit="updatePassword" class="space-y-6">
+                                    @if($hasPassword)
+                                        <div x-data="{ show: false }">
+                                            <label for="current_password" class="block text-sm font-medium text-gray-700">Senha Atual</label>
+                                            <div class="relative mt-1">
+                                                <input
+                                                    :type="show ? 'text' : 'password'" 
+                                                    wire:model="passwordForm.current_password"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm pr-10"
+                                                >
+                                                <button
+                                                    @click="show = !show"
+                                                    type="button"
+                                                    class="absolute inset-y-0 right-0 px-3 flex items-center"
+                                                >
+                                                    <i class="fad" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fad fa-info-circle text-blue-400"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm text-blue-700">
+                                                        Você ainda não possui uma senha cadastrada. Por favor, defina sua primeira senha abaixo.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <div x-data="{ show: false }">
                                         <label for="new_password" class="block text-sm font-medium text-gray-700">Nova Senha</label>
-                                        <input type="password" name="new_password" id="new_password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
+                                        <div class="relative mt-1">
+                                            <input
+                                                :type="show ? 'text' : 'password'"
+                                                wire:model="passwordForm.new_password"
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm pr-10"
+                                            >
+                                            <button
+                                                @click="show = !show"
+                                                type="button"
+                                                class="absolute inset-y-0 right-0 px-3 flex items-center"
+                                            >
+                                                <i class="fad" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div>
+
+                                    <div x-data="{ show: false }">
                                         <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700">Confirmar Nova Senha</label>
-                                        <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
+                                        <div class="relative mt-1">
+                                            <input
+                                                :type="show ? 'text' : 'password'"
+                                                wire:model="passwordForm.new_password_confirmation"
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm pr-10"
+                                            >
+                                            <button
+                                                @click="show = !show"
+                                                type="button"
+                                                class="absolute inset-y-0 right-0 px-3 flex items-center"
+                                            >
+                                                <i class="fad" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                            </button>
+                                        </div>
                                     </div>
+
                                     <div>
-                                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700">
-                                            <i class="fad fa-key mr-2"></i>
-                                            Alterar Senha
+                                        <button
+                                            type="submit"
+                                            wire:loading.attr="disabled"
+                                            wire:target="updatePassword"
+                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            <span wire:loading.remove wire:target="updatePassword">
+                                                <i class="fad fa-key mr-2"></i>
+                                                Alterar Senha
+                                            </span>
+                                            <span wire:loading wire:target="updatePassword">
+                                                <i class="fad fa-spinner fa-spin mr-2"></i>
+                                                Aguarde...
+                                            </span>
                                         </button>
                                     </div>
                                 </form>
+
+                                
                             </div>
                             <div class="w-76 mt-6 flex items-center border-0 justify-center">
                                 <img src="{{ asset('images/change_pass_image.png') }}" alt="Change Password Illustration" class="w-full h-auto object-contain rounded-lg">

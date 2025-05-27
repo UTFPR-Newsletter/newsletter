@@ -64,7 +64,7 @@ class Login extends Component
         }
 
         $subscriberController = new SubscriberController();
-        $result = $subscriberController->sendSimpleLoginEmailForLivewire($this->email);
+        $result = $subscriberController->sendSimpleLoginEmail($this->email);
 
         if ($result['status']) {
             $this->success = $result['message'];
@@ -89,7 +89,7 @@ class Login extends Component
         ]);
 
         $subscriberController = new SubscriberController();
-        $result = $subscriberController->validateSimpleLoginForLivewire($this->email, $this->verificationCode);
+        $result = $subscriberController->validateSimpleLogin($this->email, $this->verificationCode);
 
         if ($result['status']) {
             $this->success = $result['message'];
@@ -114,21 +114,17 @@ class Login extends Component
             'password.min' => 'A senha deve ter pelo menos 3 caracteres'
         ]);
 
-        // Buscar usuário pelo email
-        $user = User::where('usr_email', $this->email)->first();
+        $subscriberController = new SubscriberController();
+        $result = $subscriberController->validatePasswordLogin($this->email, $this->password);
 
-        if ($user->usr_password === $this->password && $user->usr_active === 1) {
-            // Login bem-sucedido
-            Auth::login($user);
-            $this->success = 'Login realizado com sucesso!';
-            $this->toast()->success('Login realizado com sucesso!')->send();
-
+        if ($result['status']) {
+            $this->success = $result['message'];
+            $this->toast()->success($result['message'])->send();
             // Redirecionar para a página inicial
             return redirect()->intended('/');
-
         } else {
-            $this->error = 'Credenciais inválidas ou conta inativa';
-            $this->toast()->error('Credenciais inválidas ou conta inativa')->send();
+            $this->error = $result['message'];
+            $this->toast()->error($result['message'])->send();
         }
     }
 

@@ -58,9 +58,9 @@
                 <button @click="isMenuOpen = !isMenuOpen" class="flex items-center space-x-3 p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-50 transition-colors duration-200 border border-gray-200">
                     <!-- User avatar with initial -->
                     <div class="w-8 h-8 bg-gray-800 text-white rounded-md flex items-center justify-center font-semibold text-sm">
-                        {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                        {{ strtoupper(substr($user->subscriber->sub_name ?? $user->usr_email, 0, 1)) }}
                     </div>
-                    <span class="text-sm font-medium truncate max-w-24">{{ explode('@', $user->usr_email)[0] }}</span>
+                    <span class="text-sm font-medium truncate max-w-24">{{ $user->subscriber->sub_name ?? explode('@', $user->usr_email)[0] }}</span>
                     <i class="fad fa-chevron-down text-xs mr-6"></i>
                 </button>
             @else
@@ -81,10 +81,10 @@
                     <div class="px-4 py-3 border-b border-gray-100">
                         <div class="flex items-center space-x-3">
                             <div class="w-12 h-12 bg-gray-800 text-white rounded-lg flex items-center justify-center font-semibold text-lg">
-                                {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                                {{ strtoupper(substr($user->subscriber->sub_name ?? $user->usr_email, 0, 1)) }}
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 truncate">{{ $user->usr_email }}</p>
+                                <p class="text-sm font-medium text-gray-900 truncate">{{ $user->subscriber->sub_name ?? $user->usr_email }}</p>
                                 <p class="text-xs text-gray-500 capitalize">{{ $user->usr_level }}</p>
                             </div>
                         </div>
@@ -167,9 +167,9 @@
                         <button @click="isMenuOpen = !isMenuOpen" class="flex items-center space-x-3 p-2 bg-white rounded-lg text-gray-800 hover:bg-gray-50 transition-colors duration-200 border border-gray-200">
                             <!-- User avatar with initial -->
                             <div class="w-10 h-10 bg-gray-800 text-white rounded-lg flex items-center justify-center font-semibold">
-                                {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                                {{ strtoupper(substr($user->subscriber->sub_name ?? $user->usr_email, 0, 1)) }}
                             </div>
-                            <span class="text-sm font-medium truncate max-w-32">{{ explode('@', $user->usr_email)[0] }}</span>
+                            <span class="text-sm font-medium truncate max-w-32">{{ $user->subscriber->sub_name ?? explode('@', $user->usr_email)[0] }}</span>
                             <i class="fad fa-chevron-down text-sm"></i>
                         </button>
                     @else
@@ -190,10 +190,10 @@
                             <div class="px-4 py-3 border-b border-gray-100">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-12 h-12 bg-gray-800 text-white rounded-lg flex items-center justify-center font-semibold text-lg">
-                                        {{ strtoupper(substr($user->usr_email, 0, 1)) }}
+                                        {{ strtoupper(substr($user->subscriber->sub_name ?? $user->usr_email, 0, 1)) }}
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $user->usr_email }}</p>
+                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $user->subscriber->sub_name ?? $user->usr_email }}</p>
                                         <p class="text-xs text-gray-500 capitalize">{{ $user->usr_level }}</p>
                                     </div>
                                 </div>
