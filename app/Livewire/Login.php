@@ -121,7 +121,11 @@ class Login extends Component
             $this->success = $result['message'];
             $this->toast()->success($result['message'])->send();
             // Redirecionar para a página inicial
-            return redirect()->intended('/');
+            if($result['level'] == User::LEVEL_SUBSCRIBER) {
+                return redirect()->intended('/');
+            } else if($result['level'] == User::LEVEL_ADMIN) {
+                return redirect()->intended('/admin');
+            }
         } else {
             $this->error = $result['message'];
             $this->toast()->error($result['message'])->send();

@@ -19,22 +19,10 @@ class SubscriberController extends Controller
 {
     public function validatePasswordLogin($email, $password) {
         try {
-            $subscriberCtrl = new GenericCtrl("Subscriber");
             $userCtrl = new GenericCtrl("User");
-
-            $subscriber = $subscriberCtrl->getObjectByField("sub_email", $email);
             
-            if (!$subscriber instanceof Subscriber) {
-                return [
-                    "status" => false,
-                    "message" => "Assinante não encontrado!"
-                ];
-            }
-
-            $user = $userCtrl->getObjectByFields(
-                ["usr_level", "usr_active", "represented_agent_id"],
-                [User::LEVEL_SUBSCRIBER, 1, $subscriber->sub_id]
-            );
+            // Get user by email directly
+            $user = $userCtrl->getObjectByField("usr_email", $email);
 
             if(!$user instanceof User) {
                 return [
@@ -74,6 +62,7 @@ class SubscriberController extends Controller
             return [
                 "status" => true,
                 "message" => "Login realizado com sucesso!",
+                "level" => $user->usr_level,
                 "user" => $user
             ];
         } catch (\Exception $e) {

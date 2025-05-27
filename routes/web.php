@@ -8,18 +8,23 @@ use App\Livewire\Home;
 use App\Livewire\Login;
 use App\Livewire\SubscriberProfile;
 use App\Livewire\MagicLoginAuth;
+use App\Livewire\Admin;
 
-//? Rotas
-Route::get('/', Home::class);
+//? Rotas Gerais
 Route::get('/login', Login::class)->name('login');
-Route::get('/profile', SubscriberProfile::class)->name('profile');
-Route::get('/magic-login/{token}', MagicLoginAuth::class)->name('magic.login.auth');
 
 Route::post('/logout', function() {
     Auth::logout();
     return redirect('/');
 })->name('logout');
 
+//? Rotas de Subscriber
+Route::get('/', Home::class);
+Route::get('/profile', SubscriberProfile::class)->name('profile');
+Route::get('/magic-login/{token}', MagicLoginAuth::class)->name('magic.login.auth');
+
+//? Rotas de Admin
+Route::get('/admin', Admin::class)->name('admin');
 
 //? Preview Email
 Route::get('/preview-email', function () {
