@@ -1,25 +1,21 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admin;
 
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use App\View\Components\Layouts\AdminLayout;
 
-class Admin extends Component
+#[Layout(AdminLayout::class)]
+class AdminDashboard extends Component
 {
     public $user;
-    public $activeTab = 'home';
     public $isMenuOpen = false;
-
-    public $addManagementModal = false;
 
     public function mount()
     {
         $this->user = Auth::user();
-    }
-
-    public function showAddManagementModal() {
-        $this->addManagementModal = true;
     }
 
     public function logout()
@@ -30,6 +26,6 @@ class Admin extends Component
 
     public function render()
     {
-        return view('livewire.admin');
+        return view('livewire.admin.admin-dashboard');
     }
-}
+} 

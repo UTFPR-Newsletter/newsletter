@@ -124,7 +124,7 @@ class Login extends Component
             if($result['level'] == User::LEVEL_SUBSCRIBER) {
                 return redirect()->intended('/');
             } else if($result['level'] == User::LEVEL_ADMIN) {
-                return redirect()->intended('/admin');
+                return redirect()->intended('/admin/dashboard');
             }
         } else {
             $this->error = $result['message'];

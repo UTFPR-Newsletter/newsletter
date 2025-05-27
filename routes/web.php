@@ -41,3 +41,6 @@ Route::get('/preview-email-magic', function () {
     $token = 'teste';
     return new \App\Mail\MagicLinkMail($user, $token);
 });
+
+// Admin routes
+Route::prefix('admin')->group(base_path('routes/admin.php'));
