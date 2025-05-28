@@ -3,23 +3,14 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
-use App\View\Components\Layouts\AdminLayout;
 use App\Http\Controllers\dao\GenericCtrl;
 use TallStackUi\Traits\Interactions;
 
-#[Layout(AdminLayout::class)]
-class AdminManagement extends Component
+class CategoryList extends Component
 {
     use Interactions;
 
-    public $user;
-    public $currentTab = 'categories';
-
     public $categoryModal = false;
-    public $topicModal = false;
-
     public $isEdit = false;
 
     // Form Properties
@@ -41,22 +32,24 @@ class AdminManagement extends Component
 
     public function mount()
     {
-        $this->user = Auth::user();
         $this->loadCategories();
     }
 
     public function loadCategories()
     {
-        $this->categories = $this->categoryCtrl->getAll();
+        $query = $this->categoryCtrl->model::query();
+        
+        if ($this->search) {
+            $query->where('cat_name', 'like', '%' . $this->search . '%')
+                  ->orWhere('cat_description', 'like', '%' . $this->search . '%');
+        }
+        
+        $this->categories = $query->get();
     }
 
-    public function showCorrectInsertModal($type) {
-        if($type == 'categories') {
-            $this->resetForm();
-            $this->categoryModal = true;
-        } elseif($type == 'topics') {
-            $this->topicModal = true;
-        }
+    public function showInsertModal() {
+        $this->resetForm();
+        $this->categoryModal = true;
     }
 
     public function edit($id) {
@@ -91,7 +84,9 @@ class AdminManagement extends Component
 
     public function resetForm()
     {
+        $this->isEdit = false;
         $this->categoryForm = array(
+            "id" => "",
             "name" => "",
             "description" => "",
         );
@@ -115,36 +110,28 @@ class AdminManagement extends Component
                     "cat_name" => $this->categoryForm["name"],
                     "cat_description" => $this->categoryForm["description"],
                 ));
-    
             }
 
             $this->categoryModal = false;
             $this->resetForm();
 
-            $this->toast()->success('Categoria criada com sucesso!')->send();
+            $this->toast()->success('Categoria ' . ($this->isEdit ? 'atualizada' : 'criada') . ' com sucesso!')->send();
             
-            // Recarrega a lista de categorias após criar uma nova
             $this->loadCategories();
         } catch (\Exception $e) {
-            $this->toast()->error('Ocorreu um erro ao criar a categoria. Tente novamente.' . $e->getMessage())->send();
+            $this->toast()->error('Ocorreu um erro ao ' . ($this->isEdit ? 'atualizar' : 'criar') . ' a categoria. Tente novamente.' . $e->getMessage())->send();
         }
 
         $this->categoryModal = false;
     }
 
-    public function logout()
+    public function updatedSearch()
     {
-        Auth::logout();
-        return redirect()->route('login');
-    }
-
-    public function switchTab($tab)
-    {
-        $this->currentTab = $tab;
+        $this->loadCategories();
     }
 
     public function render()
     {
-        return view('livewire.admin.admin-management');
+        return view('livewire.admin.category-list');
     }
 } 

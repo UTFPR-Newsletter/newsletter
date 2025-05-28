@@ -17,7 +17,7 @@
     <tallstackui:script />
     @livewireStyles
 </head>
-<body class="min-h-screen bg-gray-200">
+<body class="min-h-screen bg-white">
     <x-ts-dialog />
     <x-ts-toast />
 
@@ -57,6 +57,18 @@
                         <a href="{{ route('admin.management') }}"
                             class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.management') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
                             Gestão
+                        </a>
+                        <a href="#"
+                            class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.reviews') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
+                            Revisões
+                        </a>
+                        <a href="#"
+                            class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.permissions') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
+                            Permissões
+                        </a>
+                        <a href="#"
+                            class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.reports') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
+                            Relatórios
                         </a>
                     </nav>
                 </div>
@@ -139,6 +151,18 @@
                             class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.management') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
                             Gestão
                         </a>
+                        <a href="#"
+                            class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.reviews') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
+                            Revisões
+                        </a>
+                        <a href="#"
+                            class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.permissions') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
+                            Permissões
+                        </a>
+                        <a href="#"
+                            class="transition-all duration-200 relative nav-link {{ request()->routeIs('admin.reports') ? 'text-gray-900 font-medium active-tab' : 'text-gray-600 hover:text-gray-800 hover:font-medium' }}">
+                            Relatórios
+                        </a>
                     </nav>
                 </div>
 
@@ -215,9 +239,16 @@
         </div>
 
         <!-- Content Area -->
-        <div class="flex-grow bg-white">
+        <div class="flex-grow bg-white min-h-[calc(100vh-13rem)]">
             <div class="container mx-auto px-4 py-8">
                 {{ $slot }}
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-100 py-4">
+            <div class="container mx-auto text-center text-sm text-gray-500">
+                © 2025 WebNews. Todos os direitos reservados.
             </div>
         </div>
 

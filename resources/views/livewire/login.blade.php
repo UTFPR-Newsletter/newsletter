@@ -87,11 +87,15 @@
                 @if($showVerification)
                     <button
                         wire:click="resetForm"
+                        wire:loading.attr="disabled"
+                        wire:target="resetForm"
                         type="button"
-                        class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center"
+                        class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <i class="fad fa-arrow-left mr-2 text-xs"></i>
-                        Voltar
+                        <i class="fad fa-arrow-left mr-2 text-xs" wire:loading.remove wire:target="resetForm"></i>
+                        <i class="fad fa-spinner-third fa-spin mr-2 text-xs" wire:loading wire:target="resetForm"></i>
+                        <span wire:loading.remove wire:target="resetForm">Voltar</span>
+                        <span wire:loading wire:target="resetForm">Processando...</span>
                     </button>
                 @endif
 
@@ -99,11 +103,15 @@
                 @if($loginType === 'email' && !$showVerification)
                     <button
                         wire:click="switchToPassword"
+                        wire:loading.attr="disabled"
+                        wire:target="switchToPassword"
                         type="button"
-                        class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center"
+                        class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <i class="fad fa-key mr-2 text-xs"></i>
-                        Login com Senha
+                        <i class="fad fa-key mr-2 text-xs" wire:loading.remove wire:target="switchToPassword"></i>
+                        <i class="fad fa-spinner-third fa-spin mr-2 text-xs" wire:loading wire:target="switchToPassword"></i>
+                        <span wire:loading.remove wire:target="switchToPassword">Login com Senha</span>
+                        <span wire:loading wire:target="switchToPassword">Processando...</span>
                     </button>
                 @endif
 
@@ -111,11 +119,15 @@
                 @if($loginType === 'password')
                     <button
                         wire:click="switchToEmail"
+                        wire:loading.attr="disabled"
+                        wire:target="switchToEmail"
                         type="button"
-                        class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center"
+                        class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <i class="fad fa-envelope mr-2 text-xs"></i>
-                        Login Simplificado
+                        <i class="fad fa-envelope mr-2 text-xs" wire:loading.remove wire:target="switchToEmail"></i>
+                        <i class="fad fa-spinner-third fa-spin mr-2 text-xs" wire:loading wire:target="switchToEmail"></i>
+                        <span wire:loading.remove wire:target="switchToEmail">Login Simplificado</span>
+                        <span wire:loading wire:target="switchToEmail">Processando...</span>
                     </button>
                 @endif
 
@@ -124,20 +136,19 @@
                     <button
                         type="submit"
                         wire:loading.attr="disabled"
+                        wire:target="handleSubmit"
                         class="flex-1 text-sm text-center hover:cursor-pointer bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <span wire:loading.remove>
-                            <i class="fad fa-sign-in mr-2 text-xs"></i>
+                        <i class="fad fa-sign-in mr-2 text-xs" wire:loading.remove wire:target="handleSubmit"></i>
+                        <i class="fad fa-spinner-third fa-spin mr-2 text-xs" wire:loading wire:target="handleSubmit"></i>
+                        <span wire:loading.remove wire:target="handleSubmit">
                             @if($showVerification)
                                 Verificar
                             @else
                                 Login
                             @endif
                         </span>
-                        <span wire:loading>
-                            <i class="fas fa-spinner fa-spin mr-2 text-xs"></i>
-                            Enviando
-                        </span>
+                        <span wire:loading wire:target="handleSubmit">Processando...</span>
                     </button>
                 @endif
             </div>
