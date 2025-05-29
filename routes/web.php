@@ -9,9 +9,11 @@ use App\Livewire\Login;
 use App\Livewire\SubscriberProfile;
 use App\Livewire\MagicLoginAuth;
 use App\Livewire\Admin;
+use App\Livewire\AuthorSignUp;
 
 //? Rotas Gerais
 Route::get('/login', Login::class)->name('login');
+Route::get('/author-sign-up', AuthorSignUp::class)->name('author.sign.up');
 
 Route::post('/logout', function() {
     Auth::logout();
@@ -44,3 +46,6 @@ Route::get('/preview-email-magic', function () {
 
 // Admin routes
 Route::prefix('admin')->group(base_path('routes/admin.php'));
+
+// Author routes
+Route::prefix('author')->group(base_path('routes/author.php'));

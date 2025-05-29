@@ -44,6 +44,10 @@ class Home extends Component
         $this->loading = false;
     }
 
+    public function redirectToAuthorSignUp() {
+        return redirect()->route('author.sign.up');
+    }
+
     public function logout()
     {
         Auth::logout();
@@ -80,13 +84,7 @@ class Home extends Component
             // Construct image path - assuming filename only is stored in database
             $imagePath = null;
             if ($author->aut_photo) {
-                // Check if it's a full URL
-                if (filter_var($author->aut_photo, FILTER_VALIDATE_URL)) {
-                    $imagePath = $author->aut_photo;
-                } else {
-                    // Construct path to public/images directory
-                    $imagePath = asset('images/' . $author->aut_photo);
-                }
+                $imagePath = asset('storage/images/authors/' . $author->aut_id . '/' . $author->aut_photo);
             }
             
             return [

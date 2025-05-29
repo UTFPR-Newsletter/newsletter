@@ -75,23 +75,10 @@ class SubscriberController extends Controller
 
     public function sendSimpleLoginEmail($email) {
         try {
-            $subscriberCtrl = new GenericCtrl("Subscriber");
             $userCtrl = new GenericCtrl("User");
 
-            $subscriber = $subscriberCtrl->getObjectByField("sub_email", $email);
+            $user = $userCtrl->getObjectByField("usr_email", $email);
             
-            if (!$subscriber instanceof Subscriber) {
-                return [
-                    "status" => false,
-                    "message" => "Assinante não encontrado!"
-                ];
-            }
-
-            $user = $userCtrl->getObjectByFields(
-                ["usr_level", "usr_active", "represented_agent_id"],
-                [User::LEVEL_SUBSCRIBER, 1, $subscriber->sub_id]
-            );
-
             if(!$user instanceof User) {
                 return [
                     "status" => false,
@@ -158,23 +145,10 @@ class SubscriberController extends Controller
 
     public function validateSimpleLogin($email, $token) {
         try {
-            $subscriberCtrl = new GenericCtrl("Subscriber");
             $userCtrl = new GenericCtrl("User");
 
-            $subscriber = $subscriberCtrl->getObjectByField("sub_email", $email);
+            $user = $userCtrl->getObjectByField("usr_email", $email);
             
-            if (!$subscriber instanceof Subscriber) {
-                return [
-                    "status" => false,
-                    "message" => "Assinante não encontrado!"
-                ];
-            }
-
-            $user = $userCtrl->getObjectByFields(
-                ["usr_level", "usr_active", "represented_agent_id"],
-                [User::LEVEL_SUBSCRIBER, 1, $subscriber->sub_id]
-            );
-
             if(!$user instanceof User) {
                 return [
                     "status" => false,

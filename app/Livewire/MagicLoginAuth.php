@@ -69,7 +69,12 @@ class MagicLoginAuth extends Component
             // Envia o toast e redireciona após 1 segundo
             $this->toast()->success('Login realizado com sucesso!')->flash()->send();
             sleep(5);
-            return redirect('/');
+            
+            if($user->usr_level == User::LEVEL_AUTHOR) {
+                return redirect()->route('author.dashboard');
+            } else {
+                return redirect('/');
+            }
 
         } catch (\Exception $e) {
             $this->error = "Erro ao processar o token";

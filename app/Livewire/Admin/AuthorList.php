@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Http\Controllers\dao\GenericCtrl;
+use App\Models\User;
 use TallStackUi\Traits\Interactions;
 
 class AuthorList extends Component
@@ -79,7 +80,13 @@ class AuthorList extends Component
 
     public function deleteAuthor($id) {
         try {
+            $userCtrl = new GenericCtrl("User");
+
+            $user = $userCtrl->getObjectByFields(["represented_agent_id", "usr_level"], [$id, User::LEVEL_AUTHOR]);
+            $userCtrl->delete($user->usr_id);
+
             $this->authorCtrl->delete($id);
+            
             $this->toast()->success('Autor excluído com sucesso!')->send();
             $this->loadAuthors();
         } catch (\Exception $e) {

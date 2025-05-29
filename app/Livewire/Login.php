@@ -125,6 +125,8 @@ class Login extends Component
                 return redirect()->intended('/');
             } else if($result['level'] == User::LEVEL_ADMIN) {
                 return redirect()->intended('/admin/dashboard');
+            } else if($result['level'] == User::LEVEL_AUTHOR) {
+                return redirect()->intended('/author/dashboard');
             }
         } else {
             $this->error = $result['message'];

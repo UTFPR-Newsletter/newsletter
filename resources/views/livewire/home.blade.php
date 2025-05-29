@@ -113,11 +113,16 @@
                         <i class="fad fa-user-circle text-gray-700 text-xl mr-2"></i>
                         <span class="text-gray-800 font-medium">Perfil</span>
                     </div>
-                    <div class="p-3">
+                    <div class="p-3 space-y-2">
                         <a href="{{ route('login') }}"
-                            class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+                            class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:cursor-pointer hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
                             <i class="fad fa-sign-in mr-2"></i>
                             Fazer Login
+                        </a>
+                        <a wire:click="redirectToAuthorSignUp"
+                            class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:cursor-pointer hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+                            <i class="fad fa-pen-nib mr-2"></i>
+                            Torne-se Autor
                         </a>
                     </div>
                 @endif
@@ -224,11 +229,16 @@
                                 <i class="fad fa-user-circle text-gray-700 text-xl mr-2"></i>
                                 <span class="text-gray-800 font-medium">Perfil</span>
                             </div>
-                            <div class="p-3">
+                            <div class="p-3 space-y-2">
                                 <a href="{{ route('login') }}"
                                     class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:cursor-pointer hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
                                     <i class="fad fa-sign-in mr-2"></i>
                                     Fazer Login
+                                </a>
+                                <a wire:click="redirectToAuthorSignUp"
+                                    class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:cursor-pointer hover:text-white font-semibold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+                                    <i class="fad fa-pen-nib mr-2"></i>
+                                    Torne-se Autor
                                 </a>
                             </div>
                         @endif
@@ -547,10 +557,16 @@
                         </p>
 
                         <!-- Register Button -->
-                        <div>
-                            <button class="px-6 py-3 mr-2 bg-white text-lg rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 mb-2">
-                                <i class="fad fa-user-plus mr-2"></i>
-                                Me Cadastrar
+                        <div class="flex flex-row justify-center w-full mt-8 px-4">
+                            <button
+                                wire:click="redirectToAuthorSignUp"
+                                wire:loading.attr="disabled"
+                                wire:target="redirectToAuthorSignUp"
+                                class="px-6 py-3 mr-2 bg-white text-lg rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 mb-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                                <i class="fad fa-user-plus mr-2" wire:loading.remove wire:target="redirectToAuthorSignUp"></i>
+                                <i class="fad fa-spinner-third fa-spin mr-2" wire:loading wire:target="redirectToAuthorSignUp"></i>
+                                <span wire:loading.remove wire:target="redirectToAuthorSignUp">Me Cadastrar</span>
+                                <span wire:loading wire:target="redirectToAuthorSignUp">Processando...</span>
                             </button>
                             <button class="px-6 py-3 bg-white text-lg rounded-md text-gray-800 hover:bg-gray-800 hover:text-white font-semibold hover:cursor-pointer transition-colors duration-200 border border-gray-300 mb-2">
                                 <i class="fad fa-sign-in-alt mr-2"></i>
@@ -569,8 +585,8 @@
                                 @else
                                     <!-- Dynamic Author Cards -->
                                     @foreach($authors as $author)
-                                        <x-author-card 
-                                            :image="$author['image'] ?: asset('images/dev_kurt.jpg')" 
+                                        <x-author-card
+                                            :image="$author['image']"
                                             :name="$author['name']"
                                             :description="$author['description']"
                                             :badges="$author['badges']"

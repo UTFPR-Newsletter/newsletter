@@ -32,4 +32,8 @@ class User extends Authenticatable
     public function subscriber() {
         return $this->hasOne(Subscriber::class, 'sub_id', 'represented_agent_id');
     }
+
+    public function author() {
+        return $this->hasOne(Author::class, 'aut_id', 'represented_agent_id');
+    }
 }
